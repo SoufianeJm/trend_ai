@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:client/core/theme/typography.dart';
 import 'package:client/core/theme/app_palette.dart';
-import 'package:client/features/auth/view/widgets/custom_field.dart'; // Adjust the path if needed
+import 'package:client/features/auth/view/widgets/custom_field.dart';
+import 'package:client/features/auth/view/widgets/terms_checkbox.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
@@ -14,6 +15,8 @@ class _SignupPageState extends State<SignupPage> {
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
+
+  bool _agreedToTerms = false;
 
   @override
   Widget build(BuildContext context) {
@@ -38,23 +41,42 @@ class _SignupPageState extends State<SignupPage> {
                   ),
                 ),
                 const SizedBox(height: 32),
-                CustomField(
-                  label: 'First Name',
-                  hintText: 'Enter your firstname',
-                  controller: _firstNameController,
-                ),
-                const SizedBox(height: 16),
-                CustomField(
-                  label: 'Last Name',
-                  hintText: 'Enter your lastname',
-                  controller: _lastNameController,
-                ),
-                const SizedBox(height: 16),
-                CustomField(
-                  label: 'Email',
-                  hintText: 'Enter your email address',
-                  controller: _emailController,
-                  keyboardType: TextInputType.emailAddress,
+
+                // 📦 Group of 3 fields + checkbox with 16px spacing
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CustomField(
+                      label: 'First Name',
+                      hintText: 'Enter your firstname',
+                      controller: _firstNameController,
+                    ),
+                    const SizedBox(height: 16),
+                    CustomField(
+                      label: 'Last Name',
+                      hintText: 'Enter your lastname',
+                      controller: _lastNameController,
+                    ),
+                    const SizedBox(height: 16),
+                    CustomField(
+                      label: 'Email',
+                      hintText: 'Enter your email address',
+                      controller: _emailController,
+                      keyboardType: TextInputType.emailAddress,
+                    ),
+                    const SizedBox(height: 16),
+                    TermsCheckbox(
+                      value: _agreedToTerms,
+                      onChanged: (val) =>
+                          setState(() => _agreedToTerms = val ?? false),
+                      onTermsTap: () {
+                        // TODO: Navigate to Terms of Service
+                      },
+                      onPrivacyTap: () {
+                        // TODO: Navigate to Privacy Policy
+                      },
+                    ),
+                  ],
                 ),
               ],
             ),
