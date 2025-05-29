@@ -17,7 +17,7 @@ class _SignupPageState extends State<SignupPage> {
 
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
 
   bool _agreedToTerms = false;
 
@@ -72,12 +72,12 @@ class _SignupPageState extends State<SignupPage> {
                       ),
                       const SizedBox(height: 16),
                       CustomField(
-                        label: 'Email',
-                        hintText: 'Enter your email address',
-                        controller: _emailController,
-                        keyboardType: TextInputType.emailAddress,
+                        label: 'Phone Number',
+                        hintText: 'Enter your phone number',
+                        controller: _phoneController,
+                        keyboardType: TextInputType.phone,
                         validator: (value) => value == null || value.isEmpty
-                            ? 'Email is required'
+                            ? 'Phone number is required'
                             : null,
                       ),
                       const SizedBox(height: 16),
