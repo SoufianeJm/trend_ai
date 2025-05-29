@@ -8,6 +8,7 @@ class CustomField extends StatelessWidget {
   final TextEditingController? controller;
   final bool obscureText;
   final TextInputType keyboardType;
+  final String? Function(String?)? validator;
 
   const CustomField({
     super.key,
@@ -16,6 +17,7 @@ class CustomField extends StatelessWidget {
     this.controller,
     this.obscureText = false,
     this.keyboardType = TextInputType.text,
+    this.validator,
   });
 
   @override
@@ -23,21 +25,27 @@ class CustomField extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: AppTypography.bodyRegular14.copyWith(color: Palette.gray900)),
+        Text(
+          label,
+          style: AppTypography.bodyRegular14.copyWith(color: Palette.gray900),
+        ),
         const SizedBox(height: 8),
-        TextField(
+        TextFormField(
           controller: controller,
           obscureText: obscureText,
           keyboardType: keyboardType,
+          validator: validator,
           style: AppTypography.bodyRegular14.copyWith(color: Palette.gray900),
           decoration: InputDecoration(
             contentPadding: const EdgeInsets.all(16),
             hintText: hintText,
-            hintStyle: AppTypography.bodyRegular14.copyWith(color: Palette.gray400),
+            hintStyle: AppTypography.bodyRegular14.copyWith(
+              color: Palette.gray400,
+            ),
             filled: true,
             fillColor: Palette.background,
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(24), // <-- Updated radius
+              borderRadius: BorderRadius.circular(24),
               borderSide: BorderSide.none,
             ),
           ),
