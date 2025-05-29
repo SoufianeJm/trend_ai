@@ -3,6 +3,7 @@ import 'package:client/core/theme/typography.dart';
 import 'package:client/core/theme/app_palette.dart';
 import 'package:client/features/auth/view/widgets/custom_field.dart';
 import 'package:client/features/auth/view/widgets/terms_checkbox.dart';
+import 'package:client/core/widgets/custom_button.dart'; // <-- make sure this is correct
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
@@ -42,7 +43,7 @@ class _SignupPageState extends State<SignupPage> {
                 ),
                 const SizedBox(height: 32),
 
-                // 📦 Group of 3 fields + checkbox with 16px spacing
+                // 📦 Group of fields + checkbox + button
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -76,6 +77,42 @@ class _SignupPageState extends State<SignupPage> {
                         // TODO: Navigate to Privacy Policy
                       },
                     ),
+                    const SizedBox(height: 24),
+                    SizedBox(
+                      width: double.infinity,
+                      child: CustomButton(
+                        text: 'Sign Up',
+                        size: ButtonSize.large,
+                        variant: ButtonVariant.primary,
+                        onPressed: () {
+                          // TODO: Handle sign-up logic
+                        },
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Have an account? ",
+                          style: AppTypography.bodyMedium16.copyWith(
+                            color: Palette.gray400,
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            // TODO: Navigate to sign-in page
+                          },
+                          child: Text(
+                            "Sign In",
+                            style: AppTypography.bodyMedium16.copyWith(
+                              color: Palette.primary,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    // Gap before button
                   ],
                 ),
               ],
