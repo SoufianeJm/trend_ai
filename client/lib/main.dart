@@ -1,8 +1,11 @@
-import 'package:client/features/auth/view/pages/signup_page.dart';
 import 'package:flutter/material.dart';
-import 'core/theme/theme.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:client/core/theme/theme.dart';
+import 'package:client/splash/view/splash_screen.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(); 
   runApp(const MyApp());
 }
 
@@ -12,9 +15,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'TrendAI',
+      debugShowCheckedModeBanner: false,
       theme: AppTheme.lightThemeMode,
-      home: const SignupPage(),
+      home: const SplashScreen(),
     );
   }
 }
