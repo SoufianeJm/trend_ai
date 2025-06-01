@@ -5,19 +5,21 @@ import 'package:client/core/theme/app_palette.dart';
 class CustomField extends StatelessWidget {
   final String label;
   final String hintText;
-  final TextEditingController? controller;
+  final TextEditingController controller;
   final bool obscureText;
-  final TextInputType keyboardType;
+  final TextInputType? keyboardType;
   final String? Function(String?)? validator;
+  final int? maxLength;
 
   const CustomField({
     super.key,
     required this.label,
     required this.hintText,
-    this.controller,
+    required this.controller,
     this.obscureText = false,
-    this.keyboardType = TextInputType.text,
+    this.keyboardType,
     this.validator,
+    this.maxLength,
   });
 
   @override
@@ -27,7 +29,7 @@ class CustomField extends StatelessWidget {
       children: [
         Text(
           label,
-          style: AppTypography.bodyRegular14.copyWith(color: Palette.gray900),
+          style: AppTypography.bodyMedium14.copyWith(color: Palette.gray900),
         ),
         const SizedBox(height: 8),
         TextFormField(
@@ -35,13 +37,12 @@ class CustomField extends StatelessWidget {
           obscureText: obscureText,
           keyboardType: keyboardType,
           validator: validator,
+          maxLength: maxLength,
           style: AppTypography.bodyRegular14.copyWith(color: Palette.gray900),
           decoration: InputDecoration(
             contentPadding: const EdgeInsets.all(16),
             hintText: hintText,
-            hintStyle: AppTypography.bodyRegular14.copyWith(
-              color: Palette.gray400,
-            ),
+            hintStyle: AppTypography.bodyRegular14.copyWith(color: Palette.gray400),
             filled: true,
             fillColor: Palette.background,
             border: OutlineInputBorder(

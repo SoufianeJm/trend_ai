@@ -1,9 +1,4 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
-class AuthService {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   /// Verifies the phone number and sends OTP
   Future<void> verifyPhoneNumber({
@@ -67,7 +62,7 @@ class AuthService {
     }
   }
 
-  /// Saves user data to Firestore
+  // Deprecated: No longer used for authentication or user data storage.
   Future<void> saveUserData({
     required String uid,
     required String firstName,

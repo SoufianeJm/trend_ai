@@ -3,9 +3,17 @@ import 'package:client/core/theme/app_palette.dart';
 import 'package:client/core/theme/typography.dart';
 import 'package:client/core/widgets/custom_button.dart';
 import 'package:client/features/auth/view/widgets/custom_field.dart';
+import 'package:client/features/auth/services/appwrite_auth_service.dart';
+import 'package:client/features/auth/view/pages/signup_page.dart';
+import 'package:client/features/auth/view/pages/placeholder_home.dart';
 
 class SigninPage extends StatefulWidget {
-  const SigninPage({super.key});
+  final String initialEmail;
+  
+  const SigninPage({
+    super.key,
+    required this.initialEmail,
+  });
 
   @override
   State<SigninPage> createState() => _SigninPageState();
@@ -13,28 +21,54 @@ class SigninPage extends StatefulWidget {
 
 class _SigninPageState extends State<SigninPage> {
   final _formKey = GlobalKey<FormState>();
+  final _authService = AppwriteAuthService();
+
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
   bool _obscurePassword = true;
   bool _rememberMe = false;
   bool _isLoading = false;
+  String? _error;
+
+  @override
+  void initState() {
+    super.initState();
+    _emailController.text = widget.initialEmail;
+  }
 
   void _togglePasswordVisibility() {
     setState(() => _obscurePassword = !_obscurePassword);
   }
 
-  void _handleSignin() {
+  Future<void> _handleSignin() async {
     if (!_formKey.currentState!.validate()) return;
 
-    final email = _emailController.text.trim();
-    final password = _passwordController.text.trim();
+    setState(() {
+      _isLoading = true;
+      _error = null;
+    });
 
-    setState(() => _isLoading = true);
-    // TODO: Implement Firebase sign-in logic
-    debugPrint("Signing in with: $email | $password");
+    try {
+      final email = _emailController.text.trim();
+      final password = _passwordController.text.trim();
 
-    setState(() => _isLoading = false);
+      await _authService.login(email, password);
+      if (mounted) {
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (_) => const PlaceholderHome()),
+          (route) => false,
+        );
+      }
+    } catch (e) {
+      setState(() => _error = e.toString());
+      debugPrint('❌ Sign in failed: $e');
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
+    }
   }
 
   @override
@@ -111,6 +145,14 @@ class _SigninPageState extends State<SigninPage> {
                     ],
                   ),
 
+                  if (_error != null) ...[
+                    const SizedBox(height: 8),
+                    Text(
+                      _error!,
+                      style: AppTypography.bodyRegular12.copyWith(color: Palette.error),
+                    ),
+                  ],
+
                   const SizedBox(height: 16),
 
                   // Remember Me & Forgot Password
@@ -163,12 +205,17 @@ class _SigninPageState extends State<SigninPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "Don’t have an account? ",
+                        "Don't have an account? ",
                         style: AppTypography.bodyMedium16.copyWith(color: Palette.gray400),
                       ),
                       GestureDetector(
                         onTap: () {
-                          // TODO: Navigate to Sign Up page
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => SignupPage(initialEmail: _emailController.text),
+                            ),
+                          );
                         },
                         child: Text(
                           "Sign Up",

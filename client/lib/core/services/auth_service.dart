@@ -1,11 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
-class AuthService {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
-  // Callback types for phone auth
   Future<void> Function(String verificationId)? onCodeSent;
   Future<void> Function(PhoneAuthCredential credential)? onVerificationCompleted;
   Future<void> Function(FirebaseAuthException e)? onVerificationFailed;

@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:client/core/theme/theme.dart';
 import 'package:client/splash/view/splash_screen.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(); 
+void main() {
   runApp(const MyApp());
 }
 
@@ -15,9 +11,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'TrendAI',
+      title: 'Trend AI',
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.lightThemeMode,
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+        useMaterial3: true,
+      ),
       home: const SplashScreen(),
     );
   }

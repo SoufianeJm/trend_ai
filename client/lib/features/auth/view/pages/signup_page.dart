@@ -2,12 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:client/core/theme/typography.dart';
 import 'package:client/core/theme/app_palette.dart';
 import 'package:client/features/auth/view/widgets/custom_field.dart';
-import 'package:client/features/auth/view/widgets/terms_checkbox.dart';
 import 'package:client/core/widgets/custom_button.dart';
 import 'package:client/features/auth/view/pages/signin_page.dart';
+import 'package:client/features/auth/services/appwrite_auth_service.dart';
+import 'package:client/features/auth/view/pages/otp_verification_page.dart';
 
 class SignupPage extends StatefulWidget {
-  const SignupPage({super.key});
+  final String initialEmail;
+
+  const SignupPage({
+    super.key,
+    required this.initialEmail,
+  });
 
   @override
   State<SignupPage> createState() => _SignupPageState();
@@ -20,27 +26,45 @@ class _SignupPageState extends State<SignupPage> {
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
 
-  bool _agreedToTerms = false;
+  final AppwriteAuthService _authService = AppwriteAuthService();
+
   bool _isLoading = false;
+  String? _error;
 
-  Future<void> _handleSignup() async {
+  @override
+  void initState() {
+    super.initState();
+    _emailController.text = widget.initialEmail;
+  }
+
+  Future<void> _handleContinue() async {
     if (!_formKey.currentState!.validate()) return;
-    if (!_agreedToTerms) {
-      debugPrint('❌ User must agree to terms.');
-      return;
+
+    setState(() {
+      _isLoading = true;
+      _error = null;
+    });
+
+    try {
+      if (!mounted) return;
+
+      final userId = await _authService.sendEmailOtp(_emailController.text);
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => OtpVerificationPage(
+            userId: userId,
+            email: _emailController.text,
+            firstName: _firstNameController.text,
+            lastName: _lastNameController.text,
+          ),
+        ),
+      );
+    } catch (e) {
+      setState(() => _error = e.toString());
+    } finally {
+      setState(() => _isLoading = false);
     }
-
-    setState(() => _isLoading = true);
-
-    final email = _emailController.text.trim();
-    final firstName = _firstNameController.text.trim();
-    final lastName = _lastNameController.text.trim();
-
-    // TODO: Firebase email signup logic here
-    debugPrint('📧 Sign up with email: $email');
-    debugPrint('👤 Name: $firstName $lastName');
-
-    setState(() => _isLoading = false);
   }
 
   @override
@@ -71,9 +95,8 @@ class _SignupPageState extends State<SignupPage> {
                     hintText: 'Enter your first name',
                     controller: _firstNameController,
                     keyboardType: TextInputType.name,
-                    validator: (value) => value == null || value.isEmpty
-                        ? 'First name is required'
-                        : null,
+                    validator: (value) =>
+                        value == null || value.trim().isEmpty ? 'First name is required' : null,
                   ),
                   const SizedBox(height: 16),
                   CustomField(
@@ -81,9 +104,8 @@ class _SignupPageState extends State<SignupPage> {
                     hintText: 'Enter your last name',
                     controller: _lastNameController,
                     keyboardType: TextInputType.name,
-                    validator: (value) => value == null || value.isEmpty
-                        ? 'Last name is required'
-                        : null,
+                    validator: (value) =>
+                        value == null || value.trim().isEmpty ? 'Last name is required' : null,
                   ),
                   const SizedBox(height: 16),
                   CustomField(
@@ -91,25 +113,25 @@ class _SignupPageState extends State<SignupPage> {
                     hintText: 'Enter your email address',
                     controller: _emailController,
                     keyboardType: TextInputType.emailAddress,
-                    validator: (value) => value == null || !value.contains('@')
-                        ? 'Enter a valid email'
-                        : null,
+                    validator: (value) =>
+                        value == null || !value.contains('@') ? 'Enter a valid email' : null,
                   ),
                   const SizedBox(height: 16),
-                  TermsCheckbox(
-                    value: _agreedToTerms,
-                    onChanged: (val) => setState(() => _agreedToTerms = val ?? false),
-                    onTermsTap: () {},
-                    onPrivacyTap: () {},
-                  ),
+                  if (_error != null) ...[
+                    const SizedBox(height: 8),
+                    Text(
+                      _error!,
+                      style: AppTypography.bodyRegular12.copyWith(color: Palette.error),
+                    ),
+                  ],
                   const SizedBox(height: 24),
                   SizedBox(
                     width: double.infinity,
                     child: CustomButton(
-                      text: 'Sign Up',
+                      text: 'Continue',
                       size: ButtonSize.large,
                       variant: ButtonVariant.primary,
-                      onPressed: _isLoading ? null : _handleSignup,
+                      onPressed: _isLoading ? null : _handleContinue,
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -124,7 +146,9 @@ class _SignupPageState extends State<SignupPage> {
                         onTap: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (_) => const SigninPage()),
+                            MaterialPageRoute(
+                              builder: (_) => SigninPage(initialEmail: _emailController.text),
+                            ),
                           );
                         },
                         child: Text(
@@ -134,7 +158,6 @@ class _SignupPageState extends State<SignupPage> {
                       ),
                     ],
                   ),
-
                 ],
               ),
             ),
