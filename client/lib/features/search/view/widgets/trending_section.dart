@@ -25,6 +25,13 @@ class TrendingSection extends StatelessWidget {
               'Google Launches AI-Powered Virtual Assistant for Business...',
           meta: '21 Mar, 2024  -  9 min read',
         ),
+        const TrendingArticleCard(
+          imageUrl: 'assets/images/trending2.jpg',
+          category: 'International',
+          title:
+              'North Korea Conducts Missile Tests, Prompting Internation...',
+          meta: '21 Mar, 2024  -  9 min read',
+        ),
       ],
     );
   }
