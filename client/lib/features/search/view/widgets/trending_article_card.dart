@@ -31,11 +31,11 @@ class TrendingArticleCard extends StatelessWidget {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(8),
-              child: Image.asset(
-                imageUrl,
-                width: 72,
-                fit: BoxFit.cover,
-              ),
+              child: Image.network(
+              imageUrl,
+              width: 72,
+              fit: BoxFit.cover,
+            )
             ),
             const SizedBox(width: 12),
             Expanded(
