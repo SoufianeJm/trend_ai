@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:client/features/search/view/widgets/search_app_bar.dart';
 import 'package:client/features/search/view/widgets/search_widget.dart';
+import 'package:client/features/search/view/widgets/recent_search_section.dart'; // <-- Import your section
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -21,20 +22,24 @@ class _SearchPageState extends State<SearchPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 16),
-            const SearchAppBar(),
-            const SizedBox(height: 16),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: SearchPageSearchBar(
-                controller: _controller,
-                onFilterTap: _handleFilterTap,
-              ),
+        child: SingleChildScrollView( // Enables scrolling when needed
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 16),
+                const SearchAppBar(),
+                const SizedBox(height: 16),
+                SearchPageSearchBar(
+                  controller: _controller,
+                  onFilterTap: _handleFilterTap,
+                ),
+                const SizedBox(height: 32),
+                const RecentSearchSection(), // 🔹 Added recent searches here
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
