@@ -6,6 +6,7 @@ import 'package:client/features/home/view/widgets/category_chips_list.dart';
 import 'package:client/features/home/view/widgets/section_header.dart';
 import 'package:client/features/home/view/widgets/news_card_list.dart';
 import 'package:client/features/home/view/widgets/bottom_navbar.dart';
+import 'package:client/features/home/view/widgets/popular_tags_section.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -58,6 +59,20 @@ class HomePage extends StatelessWidget {
                         const SizedBox(height: 16),
 
                         const NewsCardList(),
+                        const PopularTagsSection(
+                          tags: [
+                            '#news',
+                            '#today',
+                            '#stock',
+                            '#business',
+                            '#music',
+                            '#marketing',
+                            '#game',
+                            '#crypto',
+                            '#lifestyles',
+                          ],
+                        ),
+
                       ],
                     ),
                   ),
