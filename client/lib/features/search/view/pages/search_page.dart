@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:client/features/search/view/widgets/search_app_bar.dart';
 import 'package:client/features/search/view/widgets/search_widget.dart';
-import 'package:client/features/search/view/widgets/recent_search_section.dart'; // <-- Import your section
+import 'package:client/features/search/view/widgets/recent_search_section.dart';
+import 'package:client/features/search/view/widgets/popular_tags_section.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -35,8 +36,10 @@ class _SearchPageState extends State<SearchPage> {
                   controller: _controller,
                   onFilterTap: _handleFilterTap,
                 ),
-                const SizedBox(height: 32),
-                const RecentSearchSection(), // 🔹 Added recent searches here
+                const SizedBox(height: 24),
+                const RecentSearchSection(),
+                const SizedBox(height: 12),
+                const PopularTagsSection(),
               ],
             ),
           ),
