@@ -1,15 +1,13 @@
-import 'package:flutter/material.dart';
-import 'package:client/core/theme/app_palette.dart';
-import 'package:client/core/theme/typography.dart';
-
 class SearchPageSearchBar extends StatelessWidget {
   final TextEditingController controller;
   final VoidCallback onFilterTap;
+  final void Function(String) onSubmitted;
 
   const SearchPageSearchBar({
     super.key,
     required this.controller,
     required this.onFilterTap,
+    required this.onSubmitted,
   });
 
   @override
@@ -23,22 +21,17 @@ class SearchPageSearchBar extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Image.asset(
-            'assets/icons/search.png',
-            width: 20,
-            height: 20,
-          ),
+          Image.asset('assets/icons/search.png', width: 20, height: 20),
           const SizedBox(width: 8),
           Expanded(
             child: TextField(
               controller: controller,
+              onSubmitted: onSubmitted,
               style: AppTypography.bodyMedium14.copyWith(color: Palette.gray900),
               decoration: InputDecoration(
                 isDense: true,
                 hintText: "Search article...",
-                hintStyle: AppTypography.bodyMedium14.copyWith(
-                  color: Palette.gray400,
-                ),
+                hintStyle: AppTypography.bodyMedium14.copyWith(color: Palette.gray400),
                 border: InputBorder.none,
                 contentPadding: EdgeInsets.zero,
               ),
@@ -47,11 +40,7 @@ class SearchPageSearchBar extends StatelessWidget {
           const SizedBox(width: 8),
           GestureDetector(
             onTap: onFilterTap,
-            child: Image.asset(
-              'assets/icons/filter.png',
-              width: 20,
-              height: 20,
-            ),
+            child: Image.asset('assets/icons/filter.png', width: 20, height: 20),
           ),
         ],
       ),

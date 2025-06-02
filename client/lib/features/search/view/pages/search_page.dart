@@ -1,17 +1,5 @@
-import 'package:flutter/material.dart';
-import 'package:client/features/search/view/widgets/search_app_bar.dart';
-import 'package:client/features/search/view/widgets/search_widget.dart';
-import 'package:client/features/search/view/widgets/recent_search_section.dart';
-import 'package:client/features/search/view/widgets/popular_tags_section.dart';
-import 'package:client/features/search/view/widgets/trending_section.dart';
-
-
-class SearchPage extends StatefulWidget {
-  const SearchPage({super.key});
-
-  @override
-  State<SearchPage> createState() => _SearchPageState();
-}
+import 'package:client/features/search/service/search_service.dart';
+import 'package:client/features/search/view/pages/search_results_page.dart';
 
 class _SearchPageState extends State<SearchPage> {
   final TextEditingController _controller = TextEditingController();
@@ -20,12 +8,31 @@ class _SearchPageState extends State<SearchPage> {
     // TODO: Implement filter logic
   }
 
+  Future<void> _handleSearch(String value) async {
+    final query = value.trim();
+    if (query.isEmpty) return;
+
+    try {
+      final result = await SearchService.search(query);
+      if (!mounted) return;
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => SearchResultsPage(data: result),
+        ),
+      );
+    } catch (e) {
+      debugPrint('❌ Search error: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: SingleChildScrollView( // Enables scrolling when needed
+        child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
             child: Column(
@@ -37,6 +44,7 @@ class _SearchPageState extends State<SearchPage> {
                 SearchPageSearchBar(
                   controller: _controller,
                   onFilterTap: _handleFilterTap,
+                  onSubmitted: _handleSearch,
                 ),
                 const SizedBox(height: 24),
                 const RecentSearchSection(),
