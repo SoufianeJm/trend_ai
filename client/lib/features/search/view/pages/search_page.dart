@@ -45,26 +45,31 @@ class _SearchPageState extends State<SearchPage> {
       backgroundColor: Colors.white,
       body: SafeArea(
         child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 16),
-                const SearchAppBar(),
-                const SizedBox(height: 16),
-                SearchPageSearchBar(
-                  controller: _controller,
-                  onFilterTap: _handleFilterTap,
-                  onSubmitted: _handleSearch,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 16),
+              const SearchAppBar(),
+              const SizedBox(height: 16),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SearchPageSearchBar(
+                      controller: _controller,
+                      onFilterTap: _handleFilterTap,
+                      onSubmitted: _handleSearch,
+                    ),
+                    const SizedBox(height: 24),
+                    const RecentSearchSection(),
+                    const PopularTagsSection(),
+                    const SizedBox(height: 24),
+                    const TrendingSection(),
+                  ],
                 ),
-                const SizedBox(height: 24),
-                const RecentSearchSection(),
-                const PopularTagsSection(),
-                const SizedBox(height: 24),
-                const TrendingSection(),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),

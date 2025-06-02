@@ -8,7 +8,7 @@ class SearchAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(),
+      padding: const EdgeInsets.symmetric(horizontal: 24),
       child: SizedBox(
         height: 40,
         child: Stack(
