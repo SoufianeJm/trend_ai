@@ -3,6 +3,8 @@ import 'package:client/features/search/view/widgets/search_app_bar.dart';
 import 'package:client/features/search/view/widgets/search_widget.dart';
 import 'package:client/features/search/view/widgets/recent_search_section.dart';
 import 'package:client/features/search/view/widgets/popular_tags_section.dart';
+import 'package:client/features/search/view/widgets/trending_section.dart';
+
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -38,8 +40,9 @@ class _SearchPageState extends State<SearchPage> {
                 ),
                 const SizedBox(height: 24),
                 const RecentSearchSection(),
-                const SizedBox(height: 12),
                 const PopularTagsSection(),
+                const SizedBox(height: 24),
+                const TrendingSection(),
               ],
             ),
           ),
