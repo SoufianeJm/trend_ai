@@ -10,7 +10,7 @@ class SearchAppBar extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(),
       child: SizedBox(
-        height: 40, // optional fixed height
+        height: 40,
         child: Stack(
           alignment: Alignment.center,
           children: [

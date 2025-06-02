@@ -12,11 +12,12 @@ class SearchResultsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final TextEditingController controller = TextEditingController();
+    final controller = TextEditingController();
     final List<dynamic> results = data['results'] ?? [];
 
-    final List<dynamic> articleResults = results
+    final List<Map<String, dynamic>> articles = results
         .where((item) => item['type'] == 'article')
+        .cast<Map<String, dynamic>>()
         .toList();
 
     return Scaffold(
@@ -47,26 +48,29 @@ class SearchResultsPage extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             Expanded(
-              child: articleResults.isEmpty
+              child: articles.isEmpty
                   ? const Center(
-                      child: Text('No results found'),
+                      child: Text(
+                        'No results found.',
+                        style: TextStyle(color: Colors.grey),
+                      ),
                     )
                   : ListView.builder(
                       padding: const EdgeInsets.symmetric(horizontal: 24),
-                      itemCount: articleResults.length,
-                      itemBuilder: (context, index) {
-                        final article = articleResults[index];
+                      itemCount: articles.length,
+                      itemBuilder: (_, index) {
+                        final article = articles[index];
                         final extra = article['extra'] ?? {};
+                        final imageUrl =
+                            'https://cdn.snrtbotola.ma${extra['image'] ?? ''}';
+                        final date = article['date'] ?? '';
+                        final time = article['time'] ?? '';
 
                         return TrendingArticleCard(
-                          imageUrl:
-                              'https://cdn.snrtbotola.ma${extra['image'] ?? ''}',
-                          category: extra['categorieLabel']?.toString().isEmpty ?? true
-                              ? 'Article'
-                              : extra['categorieLabel'],
+                          imageUrl: imageUrl,
+                          category: extra['categorieLabel'] ?? 'News',
                           title: article['title'] ?? '',
-                          meta:
-                              '${article['date'] ?? ''}  -  ${article['time']?.substring(0, 5) ?? ''}',
+                          meta: '$date  -  $time',
                         );
                       },
                     ),

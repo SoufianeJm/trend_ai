@@ -1,13 +1,17 @@
+import 'package:flutter/material.dart';
+import 'package:client/core/theme/app_palette.dart';
+import 'package:client/core/theme/typography.dart';
+
 class SearchPageSearchBar extends StatelessWidget {
   final TextEditingController controller;
   final VoidCallback onFilterTap;
-  final void Function(String) onSubmitted;
+  final void Function(String)? onSubmitted;
 
   const SearchPageSearchBar({
     super.key,
     required this.controller,
     required this.onFilterTap,
-    required this.onSubmitted,
+    this.onSubmitted,
   });
 
   @override
