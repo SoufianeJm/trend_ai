@@ -27,7 +27,7 @@ class RecentSearchSection extends StatelessWidget {
                   child: Text(
                     term,
                     style: AppTypography.bodyRegular14.copyWith(
-                      color: Palette.gray900,
+                      color: Palette.gray500,
                     ),
                   ),
                 ),
