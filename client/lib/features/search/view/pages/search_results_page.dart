@@ -5,6 +5,9 @@ import 'package:client/features/search/view/widgets/search_app_bar.dart';
 import 'package:client/features/search/view/widgets/search_widget.dart';
 import 'package:client/features/search/view/widgets/trending_article_card.dart';
 import 'package:client/features/search/service/search_service.dart';
+import 'package:client/features/search/view/widgets/category_chips_bar.dart';
+import 'package:client/features/search/view/widgets/top_articles_section.dart';
+import 'package:client/features/search/view/widgets/top_videos_section.dart';
 
 class SearchResultsPage extends StatefulWidget {
   final Map<String, dynamic> data;
@@ -53,59 +56,64 @@ class _SearchResultsPageState extends State<SearchResultsPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 16),
-            const SearchAppBar(),
-            const SizedBox(height: 16),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: SearchPageSearchBar(
-                controller: _controller,
-                onFilterTap: () => _performSearch(_controller.text),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 16),
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 24),
+                child: SearchAppBar(),
               ),
-            ),
-            const SizedBox(height: 24),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: Text(
-                'Results',
-                style: AppTypography.bodyMedium16.copyWith(
-                  color: Palette.gray900,
+              const SizedBox(height: 16),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: SearchPageSearchBar(
+                  controller: _controller,
+                  onFilterTap: () => _performSearch(_controller.text),
                 ),
               ),
-            ),
-            const SizedBox(height: 12),
-            Expanded(
-              child: _articles.isEmpty
-                  ? const Center(
-                      child: Text(
-                        'No results found.',
-                        style: TextStyle(color: Colors.grey),
+              const SizedBox(height: 8),
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 24),
+                child: CategoryChipsBar(),
+              ),
+              TopArticlesSection(),
+              const SizedBox(height: 12),
+              TopVideosSection(),
+              // The following is commented out as per new requirements:
+              /*
+              Expanded(
+                child: _articles.isEmpty
+                    ? const Center(
+                        child: Text(
+                          'No results found.',
+                          style: TextStyle(color: Colors.grey),
+                        ),
+                      )
+                    : ListView.builder(
+                        padding: const EdgeInsets.symmetric(horizontal: 24),
+                        itemCount: _articles.length,
+                        itemBuilder: (_, index) {
+                          final article = _articles[index];
+                          final extra = article['extra'] ?? {};
+                          final imageUrl =
+                              'https://cdn.snrtbotola.ma"+extra['image'] ?? ''}';
+                          final date = article['date'] ?? '';
+                          final time = article['time'] ?? '';
+  
+                          return TrendingArticleCard(
+                            imageUrl: imageUrl,
+                            category: extra['categorieLabel'] ?? 'News',
+                            title: article['title'] ?? '',
+                            meta: '\u000020-\u000020',
+                          );
+                        },
                       ),
-                    )
-                  : ListView.builder(
-                      padding: const EdgeInsets.symmetric(horizontal: 24),
-                      itemCount: _articles.length,
-                      itemBuilder: (_, index) {
-                        final article = _articles[index];
-                        final extra = article['extra'] ?? {};
-                        final imageUrl =
-                            'https://cdn.snrtbotola.ma${extra['image'] ?? ''}';
-                        final date = article['date'] ?? '';
-                        final time = article['time'] ?? '';
-
-                        return TrendingArticleCard(
-                          imageUrl: imageUrl,
-                          category: extra['categorieLabel'] ?? 'News',
-                          title: article['title'] ?? '',
-                          meta: '$date  -  $time',
-                        );
-                      },
-                    ),
-            ),
-          ],
+              ),
+              */
+            ],
+          ),
         ),
       ),
     );

@@ -25,18 +25,19 @@ class _SearchPageState extends State<SearchPage> {
     final query = value.trim();
     if (query.isEmpty) return;
 
-    try {
-      final result = await SearchService.search(query);
-      if (!mounted) return;
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (_) => SearchResultsPage(data: result),
+    // Navigate to results page with basic data
+    if (!mounted) return;
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => SearchResultsPage(
+          data: {
+            'query': query,
+            'results': [], // Empty results for now
+          },
         ),
-      );
-    } catch (e) {
-      debugPrint('❌ Search error: $e');
-    }
+      ),
+    );
   }
 
   @override

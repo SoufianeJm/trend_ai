@@ -1,0 +1,151 @@
+[
+  {
+    "id": "match_1509",
+    "type": "match",
+    "title": "RSB vs DHJ",
+    "description": "Botola Pro D1 - Journée 27 at 20:00 on jeudi 01 mai 2025",
+    "date": "2025-05-01",
+    "time": "19:00:00",
+    "extra": {
+      "competitionLabel": "Botola Pro D1",
+      "scheduledDate": "jeudi 01 mai 2025",
+      "scheduleTime": "20:00",
+      "timeStatus": "Pas encore commencé",
+      "phaseLabel": "Journée 27",
+      "isLive": false,
+      "sHome": 0,
+      "sAway": 0,
+      "channelName": "Arryadia",
+      "channelUrl": "https://cdn.live.easybroadcast.io/abr_corp/73_arryadia_k2tgcj0/playlist_dvr.m3u8",
+      "typeLive": "chaine",
+      "teamHome": {
+        "id": 15,
+        "name": "RSB",
+        "icon": "/uploads/teams_icon/eoTiHkhxNKVJGoxziAUg6D9p24w2Ve.png",
+        "city": "Berkane",
+        "classification": "Titulaire",
+        "sport": "Football"
+      },
+      "teamAway": {
+        "id": 76,
+        "name": "DHJ",
+        "icon": "/uploads/teams_icon/5T5q1ISMOZWTavPNG4NMX9jh9iHxcl.png",
+        "city": "",
+        "classification": "Titulaire",
+        "sport": "Football"
+      }
+    }
+  },
+  {
+    "id": "match_1503",
+    "type": "match",
+    "title": "IRT vs UTS",
+    "description": "Botola Pro D1 - Journée 27 at 20:00 on mercredi 23 avr. 2025",
+    "date": "2025-04-23",
+    "time": "19:00:00",
+    "extra": {
+      "competitionLabel": "Botola Pro D1",
+      "scheduledDate": "mercredi 23 avr. 2025",
+      "scheduleTime": "20:00",
+      "timeStatus": "Terminer",
+      "phaseLabel": "Journée 27",
+      "isLive": false,
+      "sHome": 0,
+      "sAway": 1,
+      "channelName": null,
+      "channelUrl": null,
+      "typeLive": "youtube",
+      "teamHome": {
+        "id": 5,
+        "name": "IRT",
+        "icon": "/uploads/teams_icon/1mVygOA5Ci7RrF8hEr0QuWLbm0LYtF.png",
+        "city": "Tanger",
+        "classification": "Titulaire",
+        "sport": "Football"
+      },
+      "teamAway": {
+        "id": 47,
+        "name": "UTS",
+        "icon": "/uploads/teams_icon/3c8MfkbmBKZ8boefPR3c2mTPK6HGIb.png",
+        "city": "Rabat",
+        "classification": "Titulaire",
+        "sport": "Football"
+      }
+    }
+  },
+  {
+    "id": "article_11191",
+    "type": "article",
+    "title": "CAN féminine futsal (Maroc/Angola 5-1)..Les Lionnes de l’Atlas filent avec brio vers la finale et le Mondial",
+    "description": "Les Lionnes de l’Atlas ont poinçonné leur ticket pour la finale de la Coupe d’Afrique des Nations féminine de futsal (CAN), synonyme de qualification au Mondial..",
+    "date": "2025-04-28",
+    "time": "21:21:00",
+    "extra": {
+      "categorieLabel": "CAN féminine futsal",
+      "image": "/uploads/articles_image/d9F3eHHGNONxjf182oio55tC23D4EH.jpg",
+      "videoId": null,
+      "typeVideo": null,
+      "isVideo": false
+    }
+  },
+  {
+    "id": "article_11190",
+    "type": "article",
+    "title": "Coupe de la CAF (demi-finale retour).. La Renaissance de Berkane se qualifie pour la finale",
+    "description": "La Renaissance sportive de Berkane, vainqueur à l'aller par 4 buts à 0, s'est qualifiée pour la finale de la Coupe de la Confédération africaine de football (CAF)..",
+    "date": "2025-04-27",
+    "time": "17:17:00",
+    "extra": {
+      "categorieLabel": "Coupe de la CAF",
+      "image": "/uploads/articles_image/2GuV38IpOaMajPa2UwopTpVOgtfMDX.jpg",
+      "videoId": null,
+      "typeVideo": null,
+      "isVideo": false
+    }
+  },
+  {
+    "id": "article_11189",
+    "type": "article",
+    "title": "Walid Regragui.. Le Maroc offre aux joueurs binationaux un projet de cœur et de conviction",
+    "description": "Le Maroc adopte une approche sincère envers les joueurs binationaux, en leur proposant d'adhérer à un projet national de cœur et de conviction, a affirmé le sélectionneur national..",
+    "date": "2025-04-25",
+    "time": "22:42:00",
+    "extra": {
+      "categorieLabel": "Q. CAN 2025",
+      "image": "/uploads/articles_image/yw1yKCzqJVhfGC8SCQUMUIcKHfkovt.jpg",
+      "videoId": null,
+      "typeVideo": null,
+      "isVideo": false
+    }
+  },
+  {
+    "id": "video_5",
+    "type": "video",
+    "title": "CRA - HUSA 1-1 But de Mohamed Saidi",
+    "description": "CRA - HUSA 1-1 But de Mohamed Saidi",
+    "date": "2017-09-09",
+    "time": "16:08:20",
+    "extra": {
+      "categorieLabel": "",
+      "image": "",
+      "videoId": "https://www.youtube.com/watch?v=nV75CUyHWaI",
+      "typeVideo": "youtube",
+      "isVideo": true
+    }
+  },
+  {
+    "id": "video_4",
+    "type": "video",
+    "title": "CRA - HUSA 0-1 But de Youssef El Gnaoui",
+    "description": "CRA - HUSA 0-1 But de Youssef El Gnaoui",
+    "date": "2017-09-09",
+    "time": "16:05:21",
+    "extra": {
+      "categorieLabel": "",
+      "image": "",
+      "videoId": "https://www.youtube.com/watch?v=POweGAvbBRo",
+      "typeVideo": "youtube",
+      "isVideo": true
+    }
+  }
+]
