@@ -1,38 +1,61 @@
 import 'package:flutter/material.dart';
 import 'package:client/core/theme/app_palette.dart';
 import 'package:client/core/theme/typography.dart';
+import 'package:client/features/search/view/pages/search_page.dart';
+import 'package:client/features/chatbot/view/pages/chatbot_page.dart';
+import 'package:client/features/settings/view/pages/settings_page.dart';
 
-class HomeBottomNavBar extends StatefulWidget {
-  const HomeBottomNavBar({super.key});
+class HomeBottomNavBar extends StatelessWidget {
+  final int activeIndex;
 
-  @override
-  State<HomeBottomNavBar> createState() => _HomeBottomNavBarState();
-}
+  const HomeBottomNavBar({
+    super.key,
+    this.activeIndex = 0,
+  });
 
-class _HomeBottomNavBarState extends State<HomeBottomNavBar> {
-  int _currentIndex = 0;
-
-  final List<_NavItem> _items = const [
+  static const List<_NavItem> _items = [
     _NavItem('Home', 'assets/icons/nav_home.png', 'assets/icons/nav_home_active.png'),
     _NavItem('Explore', 'assets/icons/nav_explore.png', 'assets/icons/nav_explore_active.png'),
-    _NavItem('List', 'assets/icons/nav_list.png', 'assets/icons/nav_list_active.png'),
+    _NavItem('Bot', 'assets/icons/nav_robotic.png', 'assets/icons/nav_robotic_active.png'),
     _NavItem('Profile', 'assets/icons/nav_profile.png', 'assets/icons/nav_profile_active.png'),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.white,
+      color: Palette.white,
       padding: const EdgeInsets.symmetric(vertical: 12),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: List.generate(_items.length, (index) {
           final item = _items[index];
-          final isActive = index == _currentIndex;
+          final isActive = index == activeIndex;
 
           return GestureDetector(
             behavior: HitTestBehavior.opaque,
-            onTap: () => setState(() => _currentIndex = index),
+            onTap: () {
+              switch (index) {
+                case 1:
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const SearchPage()),
+                  );
+                  break;
+                case 2:
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const ChatbotPage()),
+                  );
+                  break;
+                case 3:
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const SettingsPage()),
+                  );
+                  break;
+                // case 0 is Home — assume no action or already handled
+              }
+            },
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [

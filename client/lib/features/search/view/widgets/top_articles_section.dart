@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:client/core/theme/app_palette.dart';
 import 'package:client/core/theme/typography.dart';
+import 'package:client/features/article_detail/view/pages/article_detail_page.dart';
 
 class TopArticlesSection extends StatelessWidget {
   const TopArticlesSection({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Placeholder data with local assets
     final articles = [
       {
         'image': 'assets/images/trending1.webp',
         'category': 'Sports',
         'time': '12 min ago',
-        'title': 'Prix Marc-Vivien Foé 2025.. Achraf Hakimi élu...',
+        'title': 'Prix Marc-Vivien Foé 2025 Achraf Hakimi élu...',
         'publisherLogo': 'assets/icons/news.png',
         'publisher': 'Snrt News',
       },
@@ -50,6 +50,7 @@ class TopArticlesSection extends StatelessWidget {
         'publisher': 'Snrt News',
       },
     ];
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -59,7 +60,10 @@ class TopArticlesSection extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text('Top articles', style: AppTypography.bodyBold16),
-              Text('view more', style: AppTypography.bodyMedium14.copyWith(color: Palette.gray500)),
+              Text(
+                'view more',
+                style: AppTypography.bodyMedium14.copyWith(color: Palette.gray500),
+              ),
             ],
           ),
         ),
@@ -73,94 +77,63 @@ class TopArticlesSection extends StatelessWidget {
             separatorBuilder: (_, __) => const SizedBox(width: 12),
             itemBuilder: (context, index) {
               final article = articles[index];
-              return Container(
-                width: 210,
-                height: 240,
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Palette.gray200, width: 1),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.04),
-                      blurRadius: 8,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Image
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: Image.asset(
-                        article['image']!,
-                        width: double.infinity,
-                        height: 100,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    const SizedBox(height: 14),
-                    // Category+Time+Title block
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Text(
-                              article['category']!,
-                              style: AppTypography.bodyMedium12.copyWith(color: Palette.primary),
-                            ),
-                            const Spacer(),
-                            Icon(Icons.access_time, size: 14, color: Palette.gray400),
-                            const SizedBox(width: 6),
-                            Text(
-                              article['time']!,
-                              style: AppTypography.bodyMedium12.copyWith(color: Palette.gray400),
-                            ),
-                          ],
+              final cardWidth = MediaQuery.of(context).size.width * 0.6;
+
+              return InkWell(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const ArticleDetailPage()),
+                  );
+                },
+                child: Container(
+                  width: cardWidth,
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Palette.white,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: Palette.gray200, width: 1),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: Image.asset(
+                          article['image']!,
+                          width: cardWidth - 16,
+                          height: 120,
+                          fit: BoxFit.cover,
                         ),
-                        const SizedBox(height: 8),
-                        Text(
-                          article['title']!,
-                          style: AppTypography.bodyMedium14.copyWith(color: Palette.gray700),
-                          maxLines: 2,
+                      ),
+                      const SizedBox(height: 10),
+                      Text(
+                        article['title']!,
+                        style: AppTypography.bodyMedium16.copyWith(
+                          color: Palette.gray900,
                           overflow: TextOverflow.ellipsis,
                         ),
-                      ],
-                    ),
-                    const SizedBox(height: 14),
-                    // Publisher row
-                    Row(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(6),
-                          decoration: BoxDecoration(
-                            color: Palette.background,
-                            shape: BoxShape.circle,
-                            border: Border.all(color: Palette.gray200, width: 1),
+                        maxLines: 2,
+                      ),
+                      const SizedBox(height: 8),
+                      Container(
+                        width: double.infinity,
+                        height: 1,
+                        color: Palette.gray100,
+                      ),
+                      const SizedBox(height: 10),
+                      Row(
+                        children: [
+                          Text(
+                            article['time']!,
+                            style: AppTypography.bodyMedium14.copyWith(color: Palette.gray400),
                           ),
-                          child: ClipOval(
-                            child: Image.asset(
-                              article['publisherLogo']!,
-                              width: 14,
-                              height: 14,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        Text(
-                          article['publisher']!,
-                          style: AppTypography.bodyMedium12.copyWith(color: Palette.gray400),
-                        ),
-                        const Spacer(),
-                        Icon(Icons.more_horiz, size: 24, color: Palette.gray300),
-                      ],
-                    ),
-                  ],
+                          const Spacer(),
+                          Icon(Icons.more_horiz, size: 24, color: Palette.gray400),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               );
             },
@@ -169,4 +142,4 @@ class TopArticlesSection extends StatelessWidget {
       ],
     );
   }
-} 
+}
