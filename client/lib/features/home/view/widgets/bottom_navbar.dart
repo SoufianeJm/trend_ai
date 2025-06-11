@@ -17,7 +17,7 @@ class HomeBottomNavBar extends StatelessWidget {
     _NavItem('Home', 'assets/icons/nav_home.png', 'assets/icons/nav_home_active.png'),
     _NavItem('Explore', 'assets/icons/nav_explore.png', 'assets/icons/nav_explore_active.png'),
     _NavItem('Bot', 'assets/icons/nav_robotic.png', 'assets/icons/nav_robotic_active.png'),
-    _NavItem('Profile', 'assets/icons/nav_profile.png', 'assets/icons/nav_profile_active.png'),
+    _NavItem('Settings', 'assets/icons/nav_settings.png', 'assets/icons/nav_settings_active.png'),
   ];
 
   @override
