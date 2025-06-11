@@ -30,9 +30,8 @@ class _ChatbotPageState extends State<ChatbotPage> {
 
     // Build history for backend
     if (_messages.length > 1) {
-      final prevTurns = _messages
-          .where((m) => m['fromUser'] != null)
-          .toList();
+      final prevTurns =
+          _messages.where((m) => m['fromUser'] != null).toList();
       _history.clear();
       for (int i = 0; i < prevTurns.length - 1; i += 2) {
         if (i + 1 < prevTurns.length) {
@@ -56,22 +55,29 @@ class _ChatbotPageState extends State<ChatbotPage> {
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         final sources = data['sources'] as List<dynamic>?;
-        final hasGoodSource = sources != null && sources.isNotEmpty && (sources.first['score'] ?? 0) > 0.5;
+        final hasGoodSource = sources != null &&
+            sources.isNotEmpty &&
+            (sources.first['score'] ?? 0) > 0.5;
         String botReply = data['response']?.toString() ?? '';
         if (!hasGoodSource) {
-          botReply = "Désolé, je n'ai pas trouvé d'information pertinente dans ma base de connaissances.";
+          botReply =
+              "Désolé, je n'ai pas trouvé d'information pertinente dans ma base de connaissances.";
         }
         setState(() {
           _messages.add({'fromUser': false, 'text': botReply});
         });
       } else {
         setState(() {
-          _messages.add({'fromUser': false, 'text': "Erreur de connexion au serveur."});
+          _messages.add(
+              {'fromUser': false, 'text': "Erreur de connexion au serveur."});
         });
       }
     } catch (e) {
       setState(() {
-        _messages.add({'fromUser': false, 'text': "Erreur lors de l'envoi de la requête."});
+        _messages.add({
+          'fromUser': false,
+          'text': "Erreur lors de l'envoi de la requête."
+        });
       });
     } finally {
       setState(() {
@@ -79,8 +85,6 @@ class _ChatbotPageState extends State<ChatbotPage> {
       });
     }
   }
-
-  const ChatbotPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -153,8 +157,7 @@ class _ChatbotPageState extends State<ChatbotPage> {
                       controller: _controller,
                       enabled: !_isLoading,
                       decoration: InputDecoration(
-                        hintText: 'Posez votre question...'
-                            ,
+                        hintText: 'Posez votre question...',
                         hintStyle: AppTypography.bodyRegular14
                             .copyWith(color: Palette.gray400),
                         filled: true,
