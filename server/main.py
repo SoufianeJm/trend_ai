@@ -7,6 +7,7 @@ load_dotenv()
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from router.search_router import search_router
+from router.chat_router import chat_router
 
 app = FastAPI(
     title="SNRT Semantic Search API",
@@ -27,6 +28,7 @@ app.add_middleware(
 
 # Include the search router without prefix
 app.include_router(search_router)
+app.include_router(chat_router)
 
 @app.get("/health")
 async def health():
