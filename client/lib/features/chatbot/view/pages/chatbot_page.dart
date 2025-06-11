@@ -1,7 +1,3 @@
-import 'package:flutter/material.dart';
-import 'package:client/core/theme/app_palette.dart';
-import 'package:client/core/theme/typography.dart';
-
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
