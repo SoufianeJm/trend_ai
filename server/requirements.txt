@@ -1,0 +1,10 @@
+fastapi==0.115.12
+groq==0.24.0
+pydantic==2.11.4
+pymilvus==2.5.8
+pymilvus_model==0.3.2
+python-dotenv>=1.0.0 
+uvicorn[standard]
+peft
+transformers
+datasets 
