@@ -6,39 +6,29 @@ import 'package:client/features/article_detail/view/widgets/meta_row.dart';
 import 'package:client/features/article_detail/view/widgets/article_content.dart';
 import 'package:client/features/article_detail/view/widgets/comment_input.dart';
 import 'package:client/core/theme/app_palette.dart';
+import 'package:client/features/home/data/models/article_model.dart';
 
 class ArticleDetailPage extends StatelessWidget {
-  const ArticleDetailPage({super.key});
+  final Article article;
+
+  const ArticleDetailPage({super.key, required this.article});
 
   @override
   Widget build(BuildContext context) {
-    const String title = "Bitcoin Bull Run ‘May Not Happen Until 2025";
-    const String content = '''Bitcoin is a crypto asset that is a reference for various altcoins that have currently been launched, so its price movements are an important benchmark that has a major impact on other crypto assets.
-
-Start Crypto Asset Investment at Crypto Magic!
-In 2024, there are many events that are enough to affect the crypto market, starting from the Bitcoin network will experience a reduction in rewards (Halving), the Bitcoin ETF that has been approved, and the Dencun upgrade that will be launched in the near future.
-
-Bitcoin as a Trendsetter
-Bitcoin (BTC) has changed the entire financial system as we know it by being an alternative to centralized, government-controlled economies, the blockchain technology used in cryptocurrencies eliminates the need for centralized intermediaries and puts control back in the hands of users.
-
-Its decentralized nature not only challenged conventional notions of financial autonomy, but also spawned a wide array of other alternative cryptocurrencies (altcoins), spreading its influence massively.
-
-Therefore, Bitcoin serves as the ultimate benchmark of crypto market trends and conditions. Its price movements can set the tone for other assets in the crypto space, influencing investor confidence in both Bitcoin and altcoins.''';
-
     return Scaffold(
       backgroundColor: Palette.white,
       body: Stack(
         children: [
-          // Scrollable main content
+          // Scrollable content
           SingleChildScrollView(
-            padding: const EdgeInsets.only(bottom: 80), // to account for bottom input
+            padding: const EdgeInsets.only(bottom: 80),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Image + overlay bar
+                // Top image with overlay
                 Stack(
                   children: [
-                    const ArticleImage(),
+                    ArticleImage(article: article),
                     Positioned(
                       top: 0,
                       left: 0,
@@ -64,19 +54,18 @@ Therefore, Bitcoin serves as the ultimate benchmark of crypto market trends and 
                     ),
                   ],
                 ),
-                // Article body
                 Padding(
                   padding: const EdgeInsets.all(24.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const PublisherRow(),
+                      const PublisherRow(), // Hardcoded as per your request
                       const SizedBox(height: 24),
-                      ArticleTitle(title: title),
+                      ArticleTitle(title: article.title),
                       const SizedBox(height: 20),
-                      const MetaRow(),
+                      MetaRow(article: article),
                       const SizedBox(height: 20),
-                      ArticleContent(content: content),
+                      ArticleContent(content: article.description),
                       const SizedBox(height: 16),
                     ],
                   ),

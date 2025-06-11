@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:client/core/theme/app_palette.dart';
 import 'package:client/core/theme/typography.dart';
 import 'package:client/features/article_detail/view/pages/article_detail_page.dart';
+import 'package:client/features/home/data/models/article_model.dart';
 
 class TopArticlesSection extends StatelessWidget {
   const TopArticlesSection({super.key});
@@ -14,7 +15,6 @@ class TopArticlesSection extends StatelessWidget {
         'category': 'Sports',
         'time': '12 min ago',
         'title': 'Prix Marc-Vivien Foé 2025 Achraf Hakimi élu...',
-        'publisherLogo': 'assets/icons/news.png',
         'publisher': 'Snrt News',
       },
       {
@@ -22,7 +22,6 @@ class TopArticlesSection extends StatelessWidget {
         'category': 'Sports',
         'time': '10 min ago',
         'title': 'Another trending article headline goes here...',
-        'publisherLogo': 'assets/icons/news.png',
         'publisher': 'Snrt News',
       },
       {
@@ -30,7 +29,6 @@ class TopArticlesSection extends StatelessWidget {
         'category': 'Sports',
         'time': '8 min ago',
         'title': 'Cristiano Ronaldo makes history again...',
-        'publisherLogo': 'assets/icons/news.png',
         'publisher': 'Snrt News',
       },
       {
@@ -38,7 +36,6 @@ class TopArticlesSection extends StatelessWidget {
         'category': 'News',
         'time': '5 min ago',
         'title': 'Sample news article headline for testing...',
-        'publisherLogo': 'assets/icons/news.png',
         'publisher': 'Snrt News',
       },
       {
@@ -46,7 +43,6 @@ class TopArticlesSection extends StatelessWidget {
         'category': 'Movies',
         'time': '2 min ago',
         'title': 'Movie news: New blockbuster announced...',
-        'publisherLogo': 'assets/icons/news.png',
         'publisher': 'Snrt News',
       },
     ];
@@ -81,9 +77,25 @@ class TopArticlesSection extends StatelessWidget {
 
               return InkWell(
                 onTap: () {
+                  final mockArticle = Article(
+                    id: index,
+                    title: article['title']!,
+                    description: '',
+                    resume: '',
+                    categorieLabel: article['category']!,
+                    image: '', // No CDN path available for local assets
+                    isVideo: false,
+                    video: null,
+                    typeVideo: null,
+                    competitionId: null,
+                    publishedAt: DateTime.now(),
+                  );
+
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const ArticleDetailPage()),
+                    MaterialPageRoute(
+                      builder: (_) => ArticleDetailPage(article: mockArticle),
+                    ),
                   );
                 },
                 child: Container(

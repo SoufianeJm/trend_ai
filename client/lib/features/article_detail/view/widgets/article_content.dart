@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:client/core/theme/typography.dart';
-import 'package:client/core/theme/app_palette.dart';
+import 'package:flutter_html/flutter_html.dart';
 
 class ArticleContent extends StatelessWidget {
   final String content;
@@ -8,9 +7,6 @@ class ArticleContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      content,
-      style: AppTypography.bodyMedium16.copyWith(color: Palette.gray700),
-    );
+    return Html(data: content);
   }
 }
