@@ -5,6 +5,9 @@ import 'package:client/core/theme/app_palette.dart';
 import 'package:client/features/home/view/widgets/category_chips_list.dart';
 import 'package:client/features/home/view/widgets/section_header.dart';
 import 'package:client/features/home/view/widgets/news_card_list.dart';
+import 'package:client/features/home/data/repositories/home_repository.dart';
+import 'package:client/core/network/dio_client.dart';
+import 'package:client/features/home/data/models/article_model.dart';
 import 'package:client/features/home/view/widgets/bottom_navbar.dart';
 import 'package:client/features/home/view/widgets/popular_tags_section.dart';
 
@@ -58,7 +61,21 @@ class HomePage extends StatelessWidget {
                         ),
                         const SizedBox(height: 16),
 
-                        const NewsCardList(),
+                        FutureBuilder<List<Article>>(
+                          future: HomeRepository(DioClient(baseUrl: 'https://api.snrtbotola.ma')).getLatestArticles(),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState == ConnectionState.waiting) {
+                              return const Center(child: CircularProgressIndicator());
+                            } else if (snapshot.hasError) {
+                              return Center(child: Text('Error loading articles'));
+                            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                              return const Center(child: Text('No articles found'));
+                            } else {
+                              final articles = snapshot.data!;
+                              return NewsCardList(articles: articles);
+                            }
+                          },
+                        ),
                         const PopularTagsSection(
                           tags: [
                             '#news',
