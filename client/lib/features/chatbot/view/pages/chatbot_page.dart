@@ -45,7 +45,7 @@ class _ChatbotPageState extends State<ChatbotPage> {
 
     try {
       final response = await http.post(
-        Uri.parse('http://localhost:8080/chat'),
+        Uri.parse('http://10.0.2.2:8000/chat'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'message': userInput,
