@@ -14,13 +14,13 @@ class PublisherRow extends StatelessWidget {
         ClipRRect(
           borderRadius: BorderRadius.circular(30),
           child: Image.asset(
-            'assets/icons/news.png',
-            width: 24,
-            height: 24,
+            'assets/images/news.png',
+            width: 48,
+            height: 48,
             fit: BoxFit.cover,
             errorBuilder: (context, error, stackTrace) => Container(
-              width: 24,
-              height: 24,
+              width: 48,
+              height: 48,
               color: Palette.gray100,
               child: Icon(Icons.article, color: Palette.gray400, size: 24),
             ),

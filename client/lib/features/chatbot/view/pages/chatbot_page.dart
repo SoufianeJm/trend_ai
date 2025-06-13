@@ -45,7 +45,7 @@ class _ChatbotPageState extends State<ChatbotPage> {
 
     try {
       final response = await http.post(
-        Uri.parse('http://10.0.2.2:8000/chat'),
+        Uri.parse('https://soufianejm--snrt-semantic-api-fastapi-app.modal.run/chat'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'message': userInput,
