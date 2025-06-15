@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:client/core/theme/typography.dart';
 import 'package:client/core/theme/app_palette.dart';
+import 'package:client/features/home/view/pages/coming_soon_page.dart';
 
 class HomeTopBar extends StatelessWidget {
   const HomeTopBar({super.key});
@@ -34,10 +35,17 @@ class HomeTopBar extends StatelessWidget {
           ],
         ),
         const Spacer(),
-        Image.asset(
-          'assets/icons/bell.png',
-          width: 24,
-          height: 24,
+        GestureDetector(
+          onTap: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => const ComingSoonPage()),
+            );
+          },
+          child: Image.asset(
+            'assets/icons/bell.png',
+            width: 24,
+            height: 24,
+          ),
         ),
       ],
     );

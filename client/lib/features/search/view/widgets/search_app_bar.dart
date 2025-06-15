@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:client/core/theme/app_palette.dart';
 import 'package:client/core/theme/typography.dart';
+import 'package:client/features/home/view/pages/home_page.dart';
 
 class SearchAppBar extends StatelessWidget {
   const SearchAppBar({super.key});
@@ -15,7 +16,12 @@ class SearchAppBar extends StatelessWidget {
           Align(
             alignment: Alignment.centerLeft,
             child: GestureDetector(
-              onTap: () => Navigator.of(context).pop(),
+              onTap: () {
+                Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (_) => const HomePage()),
+                  (route) => false,
+                );
+              },
               child: Image.asset(
                 'assets/icons/back.png',
                 width: 24,

@@ -8,6 +8,7 @@ import 'package:client/features/search/service/search_service.dart';
 import 'package:client/features/search/view/widgets/category_chips_bar.dart';
 import 'package:client/features/search/view/widgets/top_articles_section.dart';
 import 'package:client/features/search/view/widgets/top_videos_section.dart';
+import 'package:client/features/search/view/pages/search_page.dart';
 
 class SearchResultsPage extends StatefulWidget {
   final Map<String, dynamic> data;
@@ -91,9 +92,44 @@ class _SearchResultsPageState extends State<SearchResultsPage> {
               const SizedBox(height: 16),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: SearchPageSearchBar(
-                  controller: _controller,
-                  onFilterTap: () => _performSearch(_controller.text),
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (_) => const SearchPage()),
+                    );
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(color: Palette.gray200, width: 1),
+                    ),
+                    child: Row(
+                      children: [
+                        Image.asset(
+                          'assets/icons/search.png',
+                          width: 20,
+                          height: 20,
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            _controller.text.isNotEmpty ? _controller.text : 'Search article...',
+                            style: AppTypography.bodyMedium14.copyWith(color: Palette.gray900),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Image.asset(
+                          'assets/icons/filter.png',
+                          width: 20,
+                          height: 20,
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ),
               const SizedBox(height: 8),
