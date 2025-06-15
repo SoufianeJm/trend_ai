@@ -6,6 +6,8 @@ import 'package:client/features/home/data/models/article_model.dart';
 import 'package:client/features/search/service/search_service.dart';
 import 'package:shimmer/shimmer.dart';
 
+const _imageBaseUrl = 'https://cdn.snrtbotola.ma';
+
 class TopArticlesSection extends StatefulWidget {
   final String query;
   const TopArticlesSection({super.key, required this.query});
@@ -15,7 +17,7 @@ class TopArticlesSection extends StatefulWidget {
 }
 
 class _TopArticlesSectionState extends State<TopArticlesSection> {
-  List<Map<String, dynamic>> _articles = [];
+  List<Article> _articles = [];
   bool _isLoading = true;
   bool _hasError = false;
 
@@ -33,25 +35,31 @@ class _TopArticlesSectionState extends State<TopArticlesSection> {
     try {
       final result = await SearchService.search(widget.query);
       final results = result['results'] ?? [];
+
       final articles = results
           .where((item) => item['type'] == 'article')
-          .map<Map<String, dynamic>>((item) {
-            final extra = item['extra'] ?? {};
-            String imagePath = extra['image'] ?? '';
-            String imageUrl = imagePath.startsWith('http')
-                ? imagePath
-                : (imagePath.isNotEmpty ? 'https://cdn.snrtbotola.ma$imagePath' : '');
-            return {
-              'title': item['title'] ?? '',
-              'imageUrl': imageUrl,
-              'category': extra['categorieLabel'] ?? 'News',
-              'time': '',
-              'publisher': '',
-            };
-          })
-          .toList();
+          .map<Article>((item) {
+        final extra = item['extra'] ?? {};
+        final imagePath = extra['image'] ?? '';
+        return Article(
+          id: item['id'] is int ? item['id'] : int.tryParse(item['id']?.toString() ?? '') ?? 0,
+          title: item['title'] ?? '',
+          description: item['description'] ?? '',
+          resume: '',
+          categorieLabel: extra['categorieLabel'] ?? 'News',
+          image: imagePath.startsWith('http') ? imagePath : '$_imageBaseUrl$imagePath',
+          isVideo: false,
+          video: null,
+          typeVideo: null,
+          competitionId: null,
+          publishedAt: item['date'] != null
+              ? DateTime.tryParse(item['date'].toString()) ?? DateTime.now()
+              : DateTime.now(),
+        );
+      }).take(5).toList();
+
       setState(() {
-        _articles = articles.take(5).toList();
+        _articles = articles;
         _isLoading = false;
       });
     } catch (e) {
@@ -64,6 +72,8 @@ class _TopArticlesSectionState extends State<TopArticlesSection> {
 
   @override
   Widget build(BuildContext context) {
+    final cardWidth = MediaQuery.of(context).size.width * 0.6;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -73,10 +83,7 @@ class _TopArticlesSectionState extends State<TopArticlesSection> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text('Top articles', style: AppTypography.bodyBold16),
-              Text(
-                'view more',
-                style: AppTypography.bodyMedium14.copyWith(color: Palette.gray500),
-              ),
+              Text('view more', style: AppTypography.bodyMedium14.copyWith(color: Palette.gray500)),
             ],
           ),
         ),
@@ -93,7 +100,6 @@ class _TopArticlesSectionState extends State<TopArticlesSection> {
                     itemCount: 3,
                     separatorBuilder: (_, __) => const SizedBox(width: 12),
                     itemBuilder: (context, index) {
-                      final cardWidth = MediaQuery.of(context).size.width * 0.6;
                       return Container(
                         width: cardWidth,
                         padding: const EdgeInsets.all(16),
@@ -113,23 +119,11 @@ class _TopArticlesSectionState extends State<TopArticlesSection> {
                               ),
                             ),
                             const SizedBox(height: 12),
-                            Container(
-                              height: 12,
-                              width: 60,
-                              color: Palette.gray100,
-                            ),
+                            Container(height: 12, width: 60, color: Palette.gray100),
                             const SizedBox(height: 4),
-                            Container(
-                              height: 16,
-                              width: double.infinity,
-                              color: Palette.gray100,
-                            ),
+                            Container(height: 16, width: double.infinity, color: Palette.gray100),
                             const SizedBox(height: 8),
-                            Container(
-                              height: 10,
-                              width: 40,
-                              color: Palette.gray100,
-                            ),
+                            Container(height: 10, width: 40, color: Palette.gray100),
                           ],
                         ),
                       );
@@ -147,26 +141,12 @@ class _TopArticlesSectionState extends State<TopArticlesSection> {
                           separatorBuilder: (_, __) => const SizedBox(width: 12),
                           itemBuilder: (context, index) {
                             final article = _articles[index];
-                            final cardWidth = MediaQuery.of(context).size.width * 0.6;
                             return InkWell(
                               onTap: () {
-                                final mockArticle = Article(
-                                  id: index,
-                                  title: article['title']!,
-                                  description: '',
-                                  resume: '',
-                                  categorieLabel: article['category']!,
-                                  image: article['imageUrl']!,
-                                  isVideo: false,
-                                  video: null,
-                                  typeVideo: null,
-                                  competitionId: null,
-                                  publishedAt: DateTime.now(),
-                                );
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (_) => ArticleDetailPage(article: mockArticle),
+                                    builder: (_) => ArticleDetailPage(article: article),
                                   ),
                                 );
                               },
@@ -183,13 +163,13 @@ class _TopArticlesSectionState extends State<TopArticlesSection> {
                                   children: [
                                     ClipRRect(
                                       borderRadius: BorderRadius.circular(12),
-                                      child: article['imageUrl'] != ''
+                                      child: article.image != ''
                                           ? Image.network(
-                                              article['imageUrl']!,
+                                              article.image,
                                               width: cardWidth - 16,
                                               height: 120,
                                               fit: BoxFit.cover,
-                                              errorBuilder: (context, error, stackTrace) => Container(
+                                              errorBuilder: (_, __, ___) => Container(
                                                 width: cardWidth - 16,
                                                 height: 120,
                                                 color: Palette.gray100,
@@ -205,7 +185,7 @@ class _TopArticlesSectionState extends State<TopArticlesSection> {
                                     ),
                                     const SizedBox(height: 10),
                                     Text(
-                                      article['title']!,
+                                      article.title,
                                       style: AppTypography.bodyMedium16.copyWith(
                                         color: Palette.gray900,
                                         overflow: TextOverflow.ellipsis,
@@ -213,16 +193,12 @@ class _TopArticlesSectionState extends State<TopArticlesSection> {
                                       maxLines: 2,
                                     ),
                                     const SizedBox(height: 8),
-                                    Container(
-                                      width: double.infinity,
-                                      height: 1,
-                                      color: Palette.gray100,
-                                    ),
+                                    Container(height: 1, width: double.infinity, color: Palette.gray100),
                                     const SizedBox(height: 10),
                                     Row(
                                       children: [
                                         Text(
-                                          article['time']!,
+                                          '', // you can format article.publishedAt if needed
                                           style: AppTypography.bodyMedium14.copyWith(color: Palette.gray400),
                                         ),
                                         const Spacer(),
