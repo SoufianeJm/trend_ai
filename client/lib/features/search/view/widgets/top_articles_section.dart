@@ -10,7 +10,8 @@ const _imageBaseUrl = 'https://cdn.snrtbotola.ma';
 
 class TopArticlesSection extends StatefulWidget {
   final String query;
-  const TopArticlesSection({super.key, required this.query});
+  final void Function(bool hasResults)? onResult;
+  const TopArticlesSection({super.key, required this.query, this.onResult});
 
   @override
   State<TopArticlesSection> createState() => _TopArticlesSectionState();
@@ -61,11 +62,13 @@ class _TopArticlesSectionState extends State<TopArticlesSection> {
       setState(() {
         _articles = articles;
         _isLoading = false;
+        widget.onResult?.call(_articles.isNotEmpty);
       });
     } catch (e) {
       setState(() {
         _isLoading = false;
         _hasError = true;
+        widget.onResult?.call(false);
       });
     }
   }

@@ -21,6 +21,8 @@ class SearchResultsPage extends StatefulWidget {
 class _SearchResultsPageState extends State<SearchResultsPage> {
   final TextEditingController _controller = TextEditingController();
   List<Map<String, dynamic>> _articles = [];
+  bool _hasArticleResults = true;
+  bool _hasVideoResults = true;
 
   @override
   void initState() {
@@ -44,6 +46,19 @@ class _SearchResultsPageState extends State<SearchResultsPage> {
             };
           })
           .toList();
+      _hasArticleResults = _articles.isNotEmpty;
+    });
+  }
+
+  void _onArticlesResult(bool hasResults) {
+    setState(() {
+      _hasArticleResults = hasResults;
+    });
+  }
+
+  void _onVideosResult(bool hasResults) {
+    setState(() {
+      _hasVideoResults = hasResults;
     });
   }
 
@@ -86,9 +101,27 @@ class _SearchResultsPageState extends State<SearchResultsPage> {
                 padding: EdgeInsets.symmetric(horizontal: 24),
                 child: CategoryChipsBar(),
               ),
-              TopArticlesSection(query: _controller.text),
-              const SizedBox(height: 12),
-              TopVideosSection(query: _controller.text),
+              if (_hasArticleResults)
+                TopArticlesSection(
+                  query: _controller.text,
+                  onResult: _onArticlesResult,
+                ),
+              if (_hasArticleResults) const SizedBox(height: 12),
+              if (_hasVideoResults)
+                TopVideosSection(
+                  query: _controller.text,
+                  onResult: _onVideosResult,
+                ),
+              if (!_hasArticleResults && !_hasVideoResults)
+                const Center(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 48),
+                    child: Text(
+                      'No results found.',
+                      style: TextStyle(color: Colors.grey, fontSize: 18),
+                    ),
+                  ),
+                ),
               // The following is commented out as per new requirements:
               /*
               Expanded(

@@ -6,7 +6,8 @@ import 'package:shimmer/shimmer.dart';
 
 class TopVideosSection extends StatefulWidget {
   final String query;
-  const TopVideosSection({super.key, required this.query});
+  final void Function(bool hasResults)? onResult;
+  const TopVideosSection({super.key, required this.query, this.onResult});
 
   @override
   State<TopVideosSection> createState() => _TopVideosSectionState();
@@ -49,11 +50,13 @@ class _TopVideosSectionState extends State<TopVideosSection> {
       setState(() {
         _videos = videos;
         _isLoading = false;
+        widget.onResult?.call(_videos.isNotEmpty);
       });
     } catch (e) {
       setState(() {
         _isLoading = false;
         _hasError = true;
+        widget.onResult?.call(false);
       });
     }
   }

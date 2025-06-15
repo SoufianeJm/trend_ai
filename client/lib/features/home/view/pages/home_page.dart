@@ -88,19 +88,7 @@ class HomePage extends StatelessWidget {
                             }
                           },
                         ),
-                        const PopularTagsSection(
-                          tags: [
-                            '#news',
-                            '#today',
-                            '#stock',
-                            '#business',
-                            '#music',
-                            '#marketing',
-                            '#game',
-                            '#crypto',
-                            '#lifestyles',
-                          ],
-                        ),
+                        const PopularTagsSection(),
 
                       ],
                     ),
