@@ -26,7 +26,7 @@ class _SearchResultsPageState extends State<SearchResultsPage> {
   void initState() {
     super.initState();
     _controller.text = widget.data['query'] ?? '';
-    _extractArticles(widget.data);
+    _performSearch(_controller.text);
   }
 
   void _extractArticles(Map<String, dynamic> data) {
@@ -34,7 +34,15 @@ class _SearchResultsPageState extends State<SearchResultsPage> {
     setState(() {
       _articles = results
           .where((item) => item['type'] == 'article')
-          .cast<Map<String, dynamic>>()
+          .map<Map<String, dynamic>>((item) {
+            final extra = item['extra'] ?? {};
+            return {
+              'title': item['title'] ?? '',
+              'imageUrl': extra['image'] != null ? 'https://cdn.snrtbotola.ma${extra['image']}' : '',
+              'category': extra['categorieLabel'] ?? 'News',
+              'meta': '', // Placeholder, update if needed
+            };
+          })
           .toList();
     });
   }
@@ -78,9 +86,9 @@ class _SearchResultsPageState extends State<SearchResultsPage> {
                 padding: EdgeInsets.symmetric(horizontal: 24),
                 child: CategoryChipsBar(),
               ),
-              TopArticlesSection(),
+              TopArticlesSection(query: _controller.text),
               const SizedBox(height: 12),
-              TopVideosSection(),
+              TopVideosSection(query: _controller.text),
               // The following is commented out as per new requirements:
               /*
               Expanded(
@@ -96,17 +104,15 @@ class _SearchResultsPageState extends State<SearchResultsPage> {
                         itemCount: _articles.length,
                         itemBuilder: (_, index) {
                           final article = _articles[index];
-                          final extra = article['extra'] ?? {};
-                          final imageUrl =
-                              'https://cdn.snrtbotola.ma"+extra['image'] ?? ''}';
-                          final date = article['date'] ?? '';
-                          final time = article['time'] ?? '';
-  
+                          final imageUrl = article['imageUrl'] ?? '';
+                          final category = article['category'] ?? 'News';
+                          final title = article['title'] ?? '';
+                          final meta = article['meta'] ?? '';
                           return TrendingArticleCard(
                             imageUrl: imageUrl,
-                            category: extra['categorieLabel'] ?? 'News',
-                            title: article['title'] ?? '',
-                            meta: '\u000020-\u000020',
+                            category: category,
+                            title: title,
+                            meta: meta,
                           );
                         },
                       ),

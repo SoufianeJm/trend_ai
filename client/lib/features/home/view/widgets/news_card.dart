@@ -4,6 +4,7 @@ import 'package:client/core/theme/typography.dart';
 import 'package:client/features/home/data/models/article_model.dart';
 import 'package:client/features/article_detail/view/pages/article_detail_page.dart';
 import 'package:client/utils/date_utils.dart';
+import 'package:shimmer/shimmer.dart';
 
 const _imageBaseUrl = 'https://cdn.snrtbotola.ma';
 
@@ -106,6 +107,104 @@ class NewsCard extends StatelessWidget {
                 ),
                 const Spacer(),
                 Image.asset('assets/icons/more.png', width: 16, height: 16),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class NewsCardSkeleton extends StatelessWidget {
+  const NewsCardSkeleton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Shimmer.fromColors(
+      baseColor: Palette.gray100,
+      highlightColor: Palette.gray200,
+      child: SizedBox(
+        width: 240,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Stack(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: Container(
+                    height: 140,
+                    width: double.infinity,
+                    color: Palette.gray100,
+                  ),
+                ),
+                Positioned(
+                  top: 8,
+                  right: 8,
+                  child: Container(
+                    width: 20,
+                    height: 20,
+                    decoration: BoxDecoration(
+                      color: Palette.gray200,
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    height: 12,
+                    color: Palette.gray100,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Container(
+                  width: 12,
+                  height: 12,
+                  color: Palette.gray100,
+                ),
+                const SizedBox(width: 6),
+                Container(
+                  width: 40,
+                  height: 10,
+                  color: Palette.gray100,
+                ),
+              ],
+            ),
+            const SizedBox(height: 6),
+            Container(
+              height: 16,
+              width: double.infinity,
+              color: Palette.gray100,
+            ),
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                Container(
+                  width: 18,
+                  height: 18,
+                  decoration: BoxDecoration(
+                    color: Palette.gray100,
+                    borderRadius: BorderRadius.circular(100),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Container(
+                  width: 60,
+                  height: 10,
+                  color: Palette.gray100,
+                ),
+                const Spacer(),
+                Container(
+                  width: 16,
+                  height: 16,
+                  color: Palette.gray100,
+                ),
               ],
             ),
           ],

@@ -10,6 +10,7 @@ import 'package:client/core/network/dio_client.dart';
 import 'package:client/features/home/data/models/article_model.dart';
 import 'package:client/features/home/view/widgets/bottom_navbar.dart';
 import 'package:client/features/home/view/widgets/popular_tags_section.dart';
+import 'package:client/features/home/view/widgets/news_card.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -65,7 +66,18 @@ class HomePage extends StatelessWidget {
                           future: HomeRepository(DioClient(baseUrl: 'https://api.snrtbotola.ma')).getLatestArticles(),
                           builder: (context, snapshot) {
                             if (snapshot.connectionState == ConnectionState.waiting) {
-                              return const Center(child: CircularProgressIndicator());
+                              return SizedBox(
+                                height: 270,
+                                child: ListView.separated(
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: 3,
+                                  itemBuilder: (_, __) => const SizedBox(
+                                    width: 199,
+                                    child: NewsCardSkeleton(),
+                                  ),
+                                  separatorBuilder: (_, __) => const SizedBox(width: 16),
+                                ),
+                              );
                             } else if (snapshot.hasError) {
                               return Center(child: Text('Error loading articles'));
                             } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
