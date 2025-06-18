@@ -34,7 +34,7 @@ class SearchPageSearchBar extends StatelessWidget {
           Expanded(
             child: TextField(
               controller: controller,
-              autofocus: true, // 👈 added autofocus
+              autofocus: true,
               onSubmitted: onSubmitted,
               style: AppTypography.bodyMedium14.copyWith(color: Palette.gray900),
               decoration: InputDecoration(

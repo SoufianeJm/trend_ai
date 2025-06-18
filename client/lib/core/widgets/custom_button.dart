@@ -11,6 +11,7 @@ class CustomButton extends StatelessWidget {
   final VoidCallback? onPressed;
   final ButtonSize size;
   final ButtonVariant variant;
+  final TextStyle? textStyle;
 
   const CustomButton({
     super.key,
@@ -18,26 +19,27 @@ class CustomButton extends StatelessWidget {
     this.onPressed,
     this.size = ButtonSize.normal,
     this.variant = ButtonVariant.primary,
+    this.textStyle,
   });
 
   @override
   Widget build(BuildContext context) {
     // 1. Determine paddings by size
     final EdgeInsets padding;
-    final TextStyle textStyle;
+    final TextStyle defaultTextStyle;
 
     switch (size) {
       case ButtonSize.small:
         padding = const EdgeInsets.symmetric(vertical: 4, horizontal: 16);
-        textStyle = AppTypography.bodyRegular12;
+        defaultTextStyle = AppTypography.bodyRegular12;
         break;
       case ButtonSize.normal:
         padding = const EdgeInsets.symmetric(vertical: 12, horizontal: 16);
-        textStyle = AppTypography.bodyRegular14;
+        defaultTextStyle = AppTypography.bodyRegular14;
         break;
       case ButtonSize.large:
         padding = const EdgeInsets.symmetric(vertical: 16, horizontal: 16);
-        textStyle = AppTypography.bodyRegular14;
+        defaultTextStyle = AppTypography.bodyRegular14;
         break;
     }
 
@@ -69,6 +71,9 @@ class CustomButton extends StatelessWidget {
         break;
     }
 
+    final TextStyle effectiveTextStyle =
+        (textStyle ?? defaultTextStyle).copyWith(color: textColor);
+
     return Opacity(
       opacity: variant == ButtonVariant.disabled ? 0.7 : 1,
       child: TextButton(
@@ -82,7 +87,7 @@ class CustomButton extends StatelessWidget {
             side: border ?? BorderSide.none,
           ),
         ),
-        child: Text(text, style: textStyle.copyWith(color: textColor)),
+        child: Text(text, style: effectiveTextStyle),
       ),
     );
   }
