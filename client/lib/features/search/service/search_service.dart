@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class SearchService {
-  static const String _baseUrl = 'https://soufianejm--snrt-semantic-api-fastapi-app.modal.run'; // remote server
+  static const String _baseUrl = 'https://joumalsoufiane--snrt-semantic-api-fastapi-app.modal.run'; // remote server
 
   static Future<Map<String, dynamic>> search(String query) async {
     final response = await http.post(

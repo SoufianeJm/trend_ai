@@ -23,7 +23,7 @@ class SettingsPage extends StatelessWidget {
           padding: const EdgeInsets.only(left: 16),
           child: IconButton(
             icon: Image.asset('assets/icons/nav_settings.png', width: 24, height: 24),
-            onPressed: () {}, // You can add navigation logic here
+            onPressed: () {},
           ),
         ),
         actions: [
