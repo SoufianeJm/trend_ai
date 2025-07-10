@@ -3,9 +3,6 @@ import 'package:client/core/theme/typography.dart';
 import 'package:client/core/theme/app_palette.dart';
 import 'package:client/core/widgets/custom_button.dart';
 import 'package:client/features/auth/view/pages/otp_page.dart';
-import 'package:appwrite/appwrite.dart';
-import 'package:appwrite/models.dart' as models;
-import 'package:appwrite/enums.dart';
 import 'package:client/features/home/view/pages/home_page.dart';
 
 class CreatePasswordPage extends StatefulWidget {
@@ -47,23 +44,13 @@ class _CreatePasswordPageState extends State<CreatePasswordPage> {
       _isLoading = true;
       _error = null;
     });
-    final client = Client()
-      .setEndpoint('https://fra.cloud.appwrite.io/v1')
-      .setProject('67dc087f00082b022eca');
-    final account = Account(client);
-    try {
-      // Create user
-      await account.create(
-        userId: ID.unique(),
-        email: widget.email,
-        password: _passwordController.text,
-        name: '${widget.firstName} ${widget.lastName}',
-      );
-      // Create session for the new user
-      await account.createEmailPasswordSession(
-        email: widget.email,
-        password: _passwordController.text,
-      );
+    
+    // Simulate signup delay
+    await Future.delayed(const Duration(seconds: 1));
+    
+    // Simple validation - accept any valid passwords for now
+    if (_passwordController.text.length >= 6 && 
+        _passwordController.text == _confirmPasswordController.text) {
       if (mounted) {
         setState(() => _isLoading = false);
         Navigator.pushAndRemoveUntil(
@@ -74,15 +61,10 @@ class _CreatePasswordPageState extends State<CreatePasswordPage> {
           (route) => false,
         );
       }
-    } on AppwriteException catch (e) {
+    } else {
       setState(() {
         _isLoading = false;
-        _error = e.message ?? 'Sign up failed.';
-      });
-    } catch (e) {
-      setState(() {
-        _isLoading = false;
-        _error = 'Sign up failed.';
+        _error = 'Sign up failed. Please check your passwords.';
       });
     }
   }

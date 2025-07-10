@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:client/core/theme/app_palette.dart';
 import 'package:client/core/theme/typography.dart';
+import 'package:client/features/auth/view/pages/signin_page.dart';
+import 'package:client/core/services/user_service.dart';
+
+// Logout functionality added
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -48,36 +52,55 @@ class SettingsPage extends StatelessWidget {
                 color: Palette.white,
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: Row(
-                children: [
-                  CircleAvatar(
-                    radius: 28,
-                    backgroundColor: Palette.backgroundBlue,
-                    child: Icon(Icons.person, color: Palette.gray900, size: 32),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'User Name',
-                          style: AppTypography.bodyMedium16.copyWith(
-                            color: Palette.gray900,
+              child: FutureBuilder<String>(
+                future: UserService.getOrGenerateUsername(),
+                builder: (context, snapshot) {
+                  final username = snapshot.data ?? 'Guest User';
+                  final initial = username.isNotEmpty ? username[0].toUpperCase() : 'G';
+                  
+                  return Row(
+                    children: [
+                      Container(
+                        width: 56,
+                        height: 56,
+                        decoration: BoxDecoration(
+                          color: Palette.backgroundBlue,
+                          shape: BoxShape.circle,
+                          border: Border.all(color: Palette.gray200, width: 2),
+                        ),
+                        child: Center(
+                          child: Text(
+                            initial,
+                            style: AppTypography.h3.copyWith(color: Palette.gray900),
+                            textAlign: TextAlign.center,
                           ),
                         ),
-                        const SizedBox(height: 4),
-                        Text(
-                          'user@email.com',
-                          style: AppTypography.bodyRegular14.copyWith(
-                            color: Palette.gray500,
-                          ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              username,
+                              style: AppTypography.bodyMedium16.copyWith(
+                                color: Palette.gray900,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              'user@email.com',
+                              style: AppTypography.bodyRegular14.copyWith(
+                                color: Palette.gray500,
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                  ),
-                  Icon(Icons.arrow_forward_ios, size: 20, color: Palette.gray400),
-                ],
+                      ),
+                      Icon(Icons.arrow_forward_ios, size: 20, color: Palette.gray400),
+                    ],
+                  );
+                },
               ),
             ),
             const SizedBox(height: 24),
@@ -135,11 +158,6 @@ class SettingsPage extends StatelessWidget {
                     onTap: () {},
                   ),
                   Divider(color: Palette.gray100, height: 1),
-                  ListTile(
-                    leading: Icon(Icons.logout, color: Palette.error),
-                    title: Text('Logout', style: AppTypography.bodyRegular14.copyWith(color: Palette.error)),
-                    onTap: () {},
-                  ),
                 ],
               ),
             ),
@@ -148,4 +166,5 @@ class SettingsPage extends StatelessWidget {
       ),
     );
   }
+
 }

@@ -3,15 +3,13 @@ import 'package:client/core/theme/typography.dart';
 import 'package:client/core/theme/app_palette.dart';
 
 class OnboardingModal extends StatelessWidget {
+  final String username;
   final VoidCallback onContinueAsGuest;
-  final VoidCallback onContinueWithGoogle;
-  final VoidCallback onContinueWithEmail;
 
   const OnboardingModal({
     super.key,
+    required this.username,
     required this.onContinueAsGuest,
-    required this.onContinueWithGoogle,
-    required this.onContinueWithEmail,
   });
 
   @override
@@ -40,50 +38,26 @@ class OnboardingModal extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                // Illustration or logo can go here if needed
-                // SizedBox(height: 16),
-                OnboardingButton(
-                  icon: 'assets/icons/ic-google.png',
-                  text: 'Continue with Google',
-                  onPressed: onContinueWithGoogle,
+                const SizedBox(height: 16),
+                
+                // Welcome message
+                Text(
+                  'Welcome $username',
+                  style: AppTypography.h3.copyWith(
+                    color: Palette.gray900,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 8),
-                OnboardingButton(
-                  icon: 'assets/icons/ic-email.png',
-                  text: 'Continue with Email',
-                  onPressed: onContinueWithEmail,
-                ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 24),
+                
+                // Continue as Guest button
                 OnboardingButton(
                   icon: 'assets/icons/ic-user.png',
                   text: 'Continue as Guest',
                   onPressed: onContinueAsGuest,
                 ),
                 const SizedBox(height: 16),
-                Text.rich(
-                  TextSpan(
-                    text: 'By continuing you agree to our ',
-                    style: AppTypography.bodyMedium12.copyWith(color: Palette.gray400),
-                    children: [
-                      TextSpan(
-                        text: 'terms',
-                        style: AppTypography.bodyMedium12.copyWith(
-                          color: Palette.gray400,
-                          decoration: TextDecoration.underline,
-                        ),
-                      ),
-                      const TextSpan(text: ' and '),
-                      TextSpan(
-                        text: 'services',
-                        style: AppTypography.bodyMedium12.copyWith(
-                          color: Palette.gray400,
-                          decoration: TextDecoration.underline,
-                        ),
-                      ),
-                    ],
-                  ),
-                  textAlign: TextAlign.center,
-                ),
               ],
             ),
           ),

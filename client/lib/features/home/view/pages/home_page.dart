@@ -10,6 +10,7 @@ import 'package:client/core/network/dio_client.dart';
 import 'package:client/features/home/data/models/article_model.dart';
 import 'package:client/features/home/view/widgets/bottom_navbar.dart';
 import 'package:client/features/home/view/widgets/popular_tags_section.dart';
+import 'package:client/features/home/view/widgets/premium_news_section.dart';
 import 'package:client/features/home/view/widgets/news_card.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:client/core/widgets/custom_button.dart';
@@ -17,9 +18,7 @@ import 'package:client/features/auth/view/widgets/custom_field.dart';
 import 'package:client/core/theme/typography.dart';
 import 'package:client/features/home/view/widgets/onboarding_modal.dart';
 import 'package:client/features/auth/view/pages/signin_page.dart';
-import 'package:appwrite/appwrite.dart';
-import 'package:appwrite/models.dart' as models;
-import 'package:appwrite/enums.dart';
+import 'package:client/core/services/user_service.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -38,21 +37,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _checkAndShowOnboardingModal() async {
-    final box = Hive.box<String>('guest');
-    final hasContinuedAsGuest = box.get('hasContinuedAsGuest') == 'true';
-
-    // Appwrite session check
-    final client = Client()
-      .setEndpoint('https://fra.cloud.appwrite.io/v1')
-      .setProject('67dc087f00082b022eca');
-    final account = Account(client);
-    try {
-      await account.get(); // Will throw if not authenticated
-      // If this succeeds, user is authenticated, so do NOT show modal
-      return;
-    } catch (_) {
-      // Not authenticated, continue to modal logic
-    }
+    // Generate username if it doesn't exist
+    final username = await UserService.getOrGenerateUsername();
+    final hasContinuedAsGuest = UserService.hasContinuedAsGuest();
 
     if (!hasContinuedAsGuest && !_modalShown) {
       _modalShown = true;
@@ -63,38 +50,16 @@ class _HomePageState extends State<HomePage> {
         isScrollControlled: true,
         backgroundColor: Colors.transparent,
         builder: (context) => OnboardingModal(
+          username: username,
           onContinueAsGuest: () async {
-            await box.put('hasContinuedAsGuest', 'true');
+            await UserService.markContinuedAsGuest();
             if (mounted) Navigator.of(context).pop();
-          },
-          onContinueWithGoogle: () async {
-            Navigator.of(context).pop();
-            final client = Client()
-              .setEndpoint('https://fra.cloud.appwrite.io/v1')
-              .setProject('67dc087f00082b022eca');
-            final account = Account(client);
-            try {
-              await account.createOAuth2Session(provider: OAuthProvider.google);
-            } catch (e) {
-              if (context.mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Google sign-in failed: $e')),
-                );
-              }
-            }
-          },
-          onContinueWithEmail: () {
-            Navigator.of(context).pop();
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (_) => const SigninPage(initialEmail: ''),
-              ),
-            );
           },
         ),
       );
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -170,6 +135,7 @@ class _HomePageState extends State<HomePage> {
                           },
                         ),
                         const PopularTagsSection(),
+                        const PremiumNewsSection(),
 
                       ],
                     ),

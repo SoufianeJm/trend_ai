@@ -4,9 +4,6 @@ import 'package:client/core/theme/typography.dart';
 import 'package:client/core/widgets/custom_button.dart';
 import 'package:client/features/auth/view/widgets/custom_field.dart';
 import 'package:client/features/auth/view/pages/signup_page.dart';
-import 'package:appwrite/appwrite.dart';
-import 'package:appwrite/models.dart' as models;
-import 'package:appwrite/enums.dart';
 import 'package:client/features/home/view/pages/home_page.dart';
 
 class SigninPage extends StatefulWidget {
@@ -45,14 +42,15 @@ class _SigninPageState extends State<SigninPage> {
       _isLoading = true;
       _error = null;
     });
+    
+    // Simulate login delay
+    await Future.delayed(const Duration(seconds: 1));
+    
+    // Simple validation - accept any email/password for now
     final email = _emailController.text.trim();
     final password = _passwordController.text.trim();
-    final client = Client()
-      .setEndpoint('https://fra.cloud.appwrite.io/v1')
-      .setProject('67dc087f00082b022eca');
-    final account = Account(client);
-    try {
-      await account.createEmailPasswordSession(email: email, password: password);
+    
+    if (email.isNotEmpty && password.isNotEmpty) {
       if (mounted) {
         setState(() => _isLoading = false);
         Navigator.pushAndRemoveUntil(
@@ -61,15 +59,10 @@ class _SigninPageState extends State<SigninPage> {
           (route) => false,
         );
       }
-    } on AppwriteException catch (e) {
+    } else {
       setState(() {
         _isLoading = false;
-        _error = e.message ?? 'Sign in failed.';
-      });
-    } catch (e) {
-      setState(() {
-        _isLoading = false;
-        _error = 'Sign in failed.';
+        _error = 'Please enter email and password.';
       });
     }
   }
