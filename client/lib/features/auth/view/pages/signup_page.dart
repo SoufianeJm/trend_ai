@@ -4,8 +4,7 @@ import 'package:client/core/theme/app_palette.dart';
 import 'package:client/features/auth/view/widgets/custom_field.dart';
 import 'package:client/core/widgets/custom_button.dart';
 import 'package:client/features/auth/view/pages/signin_page.dart';
-import 'package:client/features/auth/services/appwrite_auth_service.dart';
-import 'package:client/features/auth/view/pages/otp_verification_page.dart';
+import 'package:client/features/auth/view/pages/create_password_page.dart';
 
 class SignupPage extends StatefulWidget {
   final String initialEmail;
@@ -26,8 +25,6 @@ class _SignupPageState extends State<SignupPage> {
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
 
-  final AppwriteAuthService _authService = AppwriteAuthService();
-
   bool _isLoading = false;
   String? _error;
 
@@ -39,32 +36,16 @@ class _SignupPageState extends State<SignupPage> {
 
   Future<void> _handleContinue() async {
     if (!_formKey.currentState!.validate()) return;
-
-    setState(() {
-      _isLoading = true;
-      _error = null;
-    });
-
-    try {
-      if (!mounted) return;
-
-      final userId = await _authService.sendEmailOtp(_emailController.text);
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (_) => OtpVerificationPage(
-            userId: userId,
-            email: _emailController.text,
-            firstName: _firstNameController.text,
-            lastName: _lastNameController.text,
-          ),
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => CreatePasswordPage(
+          firstName: _firstNameController.text.trim(),
+          lastName: _lastNameController.text.trim(),
+          email: _emailController.text.trim(),
         ),
-      );
-    } catch (e) {
-      setState(() => _error = e.toString());
-    } finally {
-      setState(() => _isLoading = false);
-    }
+      ),
+    );
   }
 
   @override
@@ -81,12 +62,12 @@ class _SignupPageState extends State<SignupPage> {
                 children: [
                   const SizedBox(height: 32),
                   Text(
-                    'Sign Up',
+                    'Create Account',
                     style: AppTypography.h4.copyWith(color: Palette.gray900),
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Create account and enjoy all services',
+                    'Sign up to get started',
                     style: AppTypography.bodyRegular16.copyWith(color: Palette.gray400),
                   ),
                   const SizedBox(height: 32),
@@ -94,18 +75,18 @@ class _SignupPageState extends State<SignupPage> {
                     label: 'First Name',
                     hintText: 'Enter your first name',
                     controller: _firstNameController,
-                    keyboardType: TextInputType.name,
-                    validator: (value) =>
-                        value == null || value.trim().isEmpty ? 'First name is required' : null,
+                    validator: (value) => value == null || value.isEmpty
+                        ? 'Enter your first name'
+                        : null,
                   ),
                   const SizedBox(height: 16),
                   CustomField(
                     label: 'Last Name',
                     hintText: 'Enter your last name',
                     controller: _lastNameController,
-                    keyboardType: TextInputType.name,
-                    validator: (value) =>
-                        value == null || value.trim().isEmpty ? 'Last name is required' : null,
+                    validator: (value) => value == null || value.isEmpty
+                        ? 'Enter your last name'
+                        : null,
                   ),
                   const SizedBox(height: 16),
                   CustomField(
@@ -113,10 +94,10 @@ class _SignupPageState extends State<SignupPage> {
                     hintText: 'Enter your email address',
                     controller: _emailController,
                     keyboardType: TextInputType.emailAddress,
-                    validator: (value) =>
-                        value == null || !value.contains('@') ? 'Enter a valid email' : null,
+                    validator: (value) => value == null || !value.contains('@')
+                        ? 'Enter a valid email'
+                        : null,
                   ),
-                  const SizedBox(height: 16),
                   if (_error != null) ...[
                     const SizedBox(height: 8),
                     Text(
@@ -139,7 +120,7 @@ class _SignupPageState extends State<SignupPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "Have an account? ",
+                        'Already have an account? ',
                         style: AppTypography.bodyMedium16.copyWith(color: Palette.gray400),
                       ),
                       GestureDetector(
@@ -152,7 +133,7 @@ class _SignupPageState extends State<SignupPage> {
                           );
                         },
                         child: Text(
-                          "Sign In",
+                          'Sign In',
                           style: AppTypography.bodyMedium16.copyWith(color: Palette.primary),
                         ),
                       ),

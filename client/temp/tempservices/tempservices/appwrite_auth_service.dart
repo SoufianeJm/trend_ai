@@ -8,7 +8,7 @@ class AppwriteAuthService {
   final Functions functions = Functions(AppwriteClient.client);
   models.User? loggedInUser;
 
-  /// Sends an OTP (magic link) to the given email. Returns the userId for use in verification.
+  /// Initiates the email OTP authentication process. Sends a 6-digit code to the user's email.
   Future<String> sendEmailOtp(String email) async {
     try {
       final response = await account.createEmailToken(
@@ -21,7 +21,7 @@ class AppwriteAuthService {
     }
   }
 
-  /// Verifies the OTP using userId and secret (code from email). Logs in the user if successful.
+  /// Completes the email OTP authentication process. Logs in the user using userId and the 6-digit code (secret).
   Future<void> verifyEmailOtp({
     required String userId,
     required String secret,

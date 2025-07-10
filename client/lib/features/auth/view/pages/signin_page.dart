@@ -3,13 +3,14 @@ import 'package:client/core/theme/app_palette.dart';
 import 'package:client/core/theme/typography.dart';
 import 'package:client/core/widgets/custom_button.dart';
 import 'package:client/features/auth/view/widgets/custom_field.dart';
-import 'package:client/features/auth/services/appwrite_auth_service.dart';
 import 'package:client/features/auth/view/pages/signup_page.dart';
-import 'package:client/features/auth/view/pages/placeholder_home.dart';
+import 'package:appwrite/appwrite.dart';
+import 'package:appwrite/models.dart' as models;
+import 'package:appwrite/enums.dart';
+import 'package:client/features/home/view/pages/home_page.dart';
 
 class SigninPage extends StatefulWidget {
   final String initialEmail;
-  
   const SigninPage({
     super.key,
     required this.initialEmail,
@@ -21,11 +22,8 @@ class SigninPage extends StatefulWidget {
 
 class _SigninPageState extends State<SigninPage> {
   final _formKey = GlobalKey<FormState>();
-  final _authService = AppwriteAuthService();
-
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-
   bool _obscurePassword = true;
   bool _rememberMe = false;
   bool _isLoading = false;
@@ -43,31 +41,36 @@ class _SigninPageState extends State<SigninPage> {
 
   Future<void> _handleSignin() async {
     if (!_formKey.currentState!.validate()) return;
-
     setState(() {
       _isLoading = true;
       _error = null;
     });
-
+    final email = _emailController.text.trim();
+    final password = _passwordController.text.trim();
+    final client = Client()
+      .setEndpoint('https://fra.cloud.appwrite.io/v1')
+      .setProject('67dc087f00082b022eca');
+    final account = Account(client);
     try {
-      final email = _emailController.text.trim();
-      final password = _passwordController.text.trim();
-
-      await _authService.login(email, password);
+      await account.createEmailPasswordSession(email: email, password: password);
       if (mounted) {
+        setState(() => _isLoading = false);
         Navigator.pushAndRemoveUntil(
           context,
-          MaterialPageRoute(builder: (_) => const PlaceholderHome()),
+          MaterialPageRoute(builder: (_) => const HomePage()),
           (route) => false,
         );
       }
+    } on AppwriteException catch (e) {
+      setState(() {
+        _isLoading = false;
+        _error = e.message ?? 'Sign in failed.';
+      });
     } catch (e) {
-      setState(() => _error = e.toString());
-      debugPrint('❌ Sign in failed: $e');
-    } finally {
-      if (mounted) {
-        setState(() => _isLoading = false);
-      }
+      setState(() {
+        _isLoading = false;
+        _error = 'Sign in failed.';
+      });
     }
   }
 
@@ -85,7 +88,7 @@ class _SigninPageState extends State<SigninPage> {
                 children: [
                   const SizedBox(height: 32),
                   Text(
-                    'Welcome Back!',
+                    'Welcome to TrendAI!',
                     style: AppTypography.h4.copyWith(color: Palette.gray900),
                   ),
                   const SizedBox(height: 8),
@@ -94,7 +97,6 @@ class _SigninPageState extends State<SigninPage> {
                     style: AppTypography.bodyRegular16.copyWith(color: Palette.gray400),
                   ),
                   const SizedBox(height: 32),
-
                   // Email Field
                   CustomField(
                     label: 'Email',
@@ -106,7 +108,6 @@ class _SigninPageState extends State<SigninPage> {
                         : null,
                   ),
                   const SizedBox(height: 16),
-
                   // Password Field
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -144,7 +145,6 @@ class _SigninPageState extends State<SigninPage> {
                       ),
                     ],
                   ),
-
                   if (_error != null) ...[
                     const SizedBox(height: 8),
                     Text(
@@ -152,9 +152,7 @@ class _SigninPageState extends State<SigninPage> {
                       style: AppTypography.bodyRegular12.copyWith(color: Palette.error),
                     ),
                   ],
-
                   const SizedBox(height: 16),
-
                   // Remember Me & Forgot Password
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -184,9 +182,7 @@ class _SigninPageState extends State<SigninPage> {
                       ),
                     ],
                   ),
-
                   const SizedBox(height: 24),
-
                   // Sign In Button
                   SizedBox(
                     width: double.infinity,
@@ -197,9 +193,7 @@ class _SigninPageState extends State<SigninPage> {
                       onPressed: _isLoading ? null : _handleSignin,
                     ),
                   ),
-
                   const SizedBox(height: 16),
-
                   // Sign Up redirect
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,

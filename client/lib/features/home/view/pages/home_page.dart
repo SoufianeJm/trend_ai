@@ -16,6 +16,10 @@ import 'package:client/core/widgets/custom_button.dart';
 import 'package:client/features/auth/view/widgets/custom_field.dart';
 import 'package:client/core/theme/typography.dart';
 import 'package:client/features/home/view/widgets/onboarding_modal.dart';
+import 'package:client/features/auth/view/pages/signin_page.dart';
+import 'package:appwrite/appwrite.dart';
+import 'package:appwrite/models.dart' as models;
+import 'package:appwrite/enums.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -36,6 +40,20 @@ class _HomePageState extends State<HomePage> {
   Future<void> _checkAndShowOnboardingModal() async {
     final box = Hive.box<String>('guest');
     final hasContinuedAsGuest = box.get('hasContinuedAsGuest') == 'true';
+
+    // Appwrite session check
+    final client = Client()
+      .setEndpoint('https://fra.cloud.appwrite.io/v1')
+      .setProject('67dc087f00082b022eca');
+    final account = Account(client);
+    try {
+      await account.get(); // Will throw if not authenticated
+      // If this succeeds, user is authenticated, so do NOT show modal
+      return;
+    } catch (_) {
+      // Not authenticated, continue to modal logic
+    }
+
     if (!hasContinuedAsGuest && !_modalShown) {
       _modalShown = true;
       await showModalBottomSheet(
@@ -49,9 +67,29 @@ class _HomePageState extends State<HomePage> {
             await box.put('hasContinuedAsGuest', 'true');
             if (mounted) Navigator.of(context).pop();
           },
-          onEmailSubmit: (email) {
-            // For now, just close the modal. Future: redirect to sign in/up.
-            if (mounted) Navigator.of(context).pop();
+          onContinueWithGoogle: () async {
+            Navigator.of(context).pop();
+            final client = Client()
+              .setEndpoint('https://fra.cloud.appwrite.io/v1')
+              .setProject('67dc087f00082b022eca');
+            final account = Account(client);
+            try {
+              await account.createOAuth2Session(provider: OAuthProvider.google);
+            } catch (e) {
+              if (context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Google sign-in failed: $e')),
+                );
+              }
+            }
+          },
+          onContinueWithEmail: () {
+            Navigator.of(context).pop();
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) => const SigninPage(initialEmail: ''),
+              ),
+            );
           },
         ),
       );
