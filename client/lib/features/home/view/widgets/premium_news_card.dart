@@ -19,13 +19,16 @@ class PremiumNewsCard extends StatelessWidget {
     this.publisherLogo,
     this.isVerified = false,
   });
+  
+  // Cache formatted date to avoid repeated computation
+  String get _formattedDate {
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    final date = article.publishedAt;
+    return '${months[date.month - 1]} ${date.day}, ${date.year}';
+  }
 
   @override
   Widget build(BuildContext context) {
-    final months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    final date = article.publishedAt;
-    final formattedDate = '${months[date.month - 1]} ${date.day}, ${date.year}';
-    
     return GestureDetector(
       onTap: () {
         Navigator.of(context).push(
@@ -111,7 +114,7 @@ class PremiumNewsCard extends StatelessWidget {
                                 ],
                               ),
                               Text(
-                                formattedDate,
+                                _formattedDate,
                                 style: AppTypography.bodyRegular12.copyWith(
                                   color: Palette.gray400,
                                 ),
