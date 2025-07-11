@@ -5,13 +5,67 @@ import 'package:client/features/home/data/models/article_model.dart';
 import 'package:client/features/article_detail/view/pages/article_detail_page.dart';
 import 'package:client/utils/date_utils.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:client/features/bookmarks/data/services/bookmark_service.dart';
 
 const _imageBaseUrl = 'https://cdn.snrtbotola.ma';
 
-class NewsCard extends StatelessWidget {
+class NewsCard extends StatefulWidget {
   final Article item;
 
   const NewsCard({super.key, required this.item});
+
+  @override
+  State<NewsCard> createState() => _NewsCardState();
+}
+
+class _NewsCardState extends State<NewsCard> {
+  bool _isBookmarked = false;
+  bool _isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkBookmarkStatus();
+  }
+
+  Future<void> _checkBookmarkStatus() async {
+    final isBookmarked = await BookmarkService.isBookmarked(widget.item.id);
+    if (mounted) {
+      setState(() {
+        _isBookmarked = isBookmarked;
+      });
+    }
+  }
+
+  Future<void> _toggleBookmark() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    final success = await BookmarkService.toggleBookmark(widget.item.id);
+    
+    if (success && mounted) {
+      setState(() {
+        _isBookmarked = !_isBookmarked;
+        _isLoading = false;
+      });
+
+      // Show feedback to user
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            _isBookmarked ? 'Article saved!' : 'Article removed from saved',
+          ),
+          duration: const Duration(seconds: 2),
+          backgroundColor: _isBookmarked ? Colors.green : Colors.orange,
+        ),
+      );
+    } else if (mounted) {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +73,7 @@ class NewsCard extends StatelessWidget {
       onTap: () {
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (_) => ArticleDetailPage(article: item),
+            builder: (_) => ArticleDetailPage(article: widget.item),
           ),
         );
       },
@@ -33,7 +87,7 @@ class NewsCard extends StatelessWidget {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(12),
                   child: Image.network(
-                    '$_imageBaseUrl${item.image}',
+                    '$_imageBaseUrl${widget.item.image}',
                     height: 140,
                     width: double.infinity,
                     fit: BoxFit.cover,
@@ -47,10 +101,32 @@ class NewsCard extends StatelessWidget {
                 Positioned(
                   top: 8,
                   right: 8,
-                  child: Image.asset(
-                    'assets/icons/bookmark_empty.png',
-                    width: 20,
-                    height: 20,
+                  child: GestureDetector(
+                    onTap: _toggleBookmark,
+                    child: Container(
+                      width: 28,
+                      height: 28,
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.9),
+                        shape: BoxShape.circle,
+                      ),
+                      child: _isLoading
+                          ? const Center(
+                              child: SizedBox(
+                                width: 12,
+                                height: 12,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: Palette.primary,
+                                ),
+                              ),
+                            )
+                          : Icon(
+                              _isBookmarked ? Icons.bookmark : Icons.bookmark_border,
+                              size: 16,
+                              color: _isBookmarked ? Palette.primary : Colors.grey[600],
+                            ),
+                    ),
                   ),
                 ),
               ],
@@ -60,7 +136,7 @@ class NewsCard extends StatelessWidget {
               children: [
                 Expanded(
                   child: Text(
-                    item.categorieLabel,
+                    widget.item.categorieLabel,
                     style: AppTypography.bodyMedium10.copyWith(color: Palette.primary),
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -70,7 +146,7 @@ class NewsCard extends StatelessWidget {
                     Image.asset('assets/icons/clock.png', width: 12, height: 12),
                     const SizedBox(width: 6),
                     Text(
-                      timeAgoFromNow(item.publishedAt),
+                      timeAgoFromNow(widget.item.publishedAt),
                       style: AppTypography.bodyRegular10.copyWith(color: Palette.gray400),
                     ),
                   ],
@@ -79,7 +155,7 @@ class NewsCard extends StatelessWidget {
             ),
             const SizedBox(height: 6),
             Text(
-              item.title,
+              widget.item.title,
               style: AppTypography.bodyMedium14.copyWith(color: Palette.gray900),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,

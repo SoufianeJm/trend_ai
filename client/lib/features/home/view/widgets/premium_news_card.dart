@@ -3,10 +3,11 @@ import 'package:client/core/theme/app_palette.dart';
 import 'package:client/core/theme/typography.dart';
 import 'package:client/features/home/data/models/article_model.dart';
 import 'package:client/features/article_detail/view/pages/article_detail_page.dart';
+import 'package:client/features/bookmarks/data/services/bookmark_service.dart';
 
 const _imageBaseUrl = 'https://cdn.snrtbotola.ma';
 
-class PremiumNewsCard extends StatelessWidget {
+class PremiumNewsCard extends StatefulWidget {
   final Article article;
   final String? publisherName;
   final String? publisherLogo;
@@ -20,11 +21,64 @@ class PremiumNewsCard extends StatelessWidget {
     this.isVerified = false,
   });
   
+  @override
+  State<PremiumNewsCard> createState() => _PremiumNewsCardState();
+}
+
+class _PremiumNewsCardState extends State<PremiumNewsCard> {
+  bool _isBookmarked = false;
+  bool _isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkBookmarkStatus();
+  }
+
   // Cache formatted date to avoid repeated computation
   String get _formattedDate {
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    final date = article.publishedAt;
+    final date = widget.article.publishedAt;
     return '${months[date.month - 1]} ${date.day}, ${date.year}';
+  }
+
+  Future<void> _checkBookmarkStatus() async {
+    final isBookmarked = await BookmarkService.isBookmarked(widget.article.id);
+    if (mounted) {
+      setState(() {
+        _isBookmarked = isBookmarked;
+      });
+    }
+  }
+
+  Future<void> _toggleBookmark() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    final success = await BookmarkService.toggleBookmark(widget.article.id);
+    
+    if (success && mounted) {
+      setState(() {
+        _isBookmarked = !_isBookmarked;
+        _isLoading = false;
+      });
+
+      // Show feedback to user
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            _isBookmarked ? 'Article saved!' : 'Article removed from saved',
+          ),
+          duration: const Duration(seconds: 2),
+          backgroundColor: _isBookmarked ? Colors.green : Colors.orange,
+        ),
+      );
+    } else if (mounted) {
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 
   @override
@@ -33,7 +87,7 @@ class PremiumNewsCard extends StatelessWidget {
       onTap: () {
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (_) => ArticleDetailPage(article: article),
+            builder: (_) => ArticleDetailPage(article: widget.article),
           ),
         );
       },
@@ -71,14 +125,14 @@ class PremiumNewsCard extends StatelessWidget {
                           decoration: BoxDecoration(
                             color: Palette.gray100,
                             borderRadius: BorderRadius.circular(4),
-                            image: publisherLogo != null
+                            image: widget.publisherLogo != null
                                 ? DecorationImage(
-                                    image: NetworkImage(publisherLogo!),
+                                    image: NetworkImage(widget.publisherLogo!),
                                     fit: BoxFit.cover,
                                   )
                                 : null,
                           ),
-                          child: publisherLogo == null
+                          child: widget.publisherLogo == null
                               ? Icon(
                                   Icons.article_outlined,
                                   size: 16,
@@ -96,14 +150,14 @@ class PremiumNewsCard extends StatelessWidget {
                                 children: [
                                   Flexible(
                                     child: Text(
-                                      publisherName ?? 'SNRT News',
+                                      widget.publisherName ?? 'SNRT News',
                                       style: AppTypography.bodyRegular14.copyWith(
                                         color: Palette.gray400,
                                       ),
                                       overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
-                                  if (isVerified) ...[
+                                  if (widget.isVerified) ...[
                                     const SizedBox(width: 4),
                                     Icon(
                                       Icons.verified,
@@ -125,18 +179,36 @@ class PremiumNewsCard extends StatelessWidget {
                       ],
                     ),
                   ),
-                  // Follow Button
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-                    decoration: BoxDecoration(
-                      color: Palette.gray200,
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: Text(
-                      'Follow',
-                      style: AppTypography.bodyMedium12.copyWith(
-                        color: Palette.gray900,
+                  // Save Button
+                  GestureDetector(
+                    onTap: _isLoading ? null : _toggleBookmark,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                      decoration: BoxDecoration(
+                        color: _isBookmarked ? Palette.primary : Palette.gray200,
+                        borderRadius: BorderRadius.circular(6),
                       ),
+                      child: _isLoading
+                          ? SizedBox(
+                              width: 40,
+                              height: 16,
+                              child: Center(
+                                child: SizedBox(
+                                  width: 12,
+                                  height: 12,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    color: _isBookmarked ? Colors.white : Palette.primary,
+                                  ),
+                                ),
+                              ),
+                            )
+                          : Text(
+                              _isBookmarked ? 'Saved' : 'Save',
+                              style: AppTypography.bodyMedium12.copyWith(
+                                color: _isBookmarked ? Colors.white : Palette.gray900,
+                              ),
+                            ),
                     ),
                   ),
                   const SizedBox(width: 8),
@@ -156,7 +228,7 @@ class PremiumNewsCard extends StatelessWidget {
               
               // Title
               Text(
-                article.title,
+                widget.article.title,
                 style: AppTypography.bodyBold18.copyWith(
                   color: Palette.gray900,
                   height: 1.44,
@@ -175,7 +247,7 @@ class PremiumNewsCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(5),
                 ),
                 child: Text(
-                  article.categorieLabel,
+                  widget.article.categorieLabel,
                   style: AppTypography.bodyMedium12.copyWith(
                     color: Palette.primary,
                   ),
@@ -191,11 +263,11 @@ class PremiumNewsCard extends StatelessWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(9),
                 ),
-                child: article.image.isNotEmpty
+                child: widget.article.image.isNotEmpty
                     ? ClipRRect(
                         borderRadius: BorderRadius.circular(9),
                         child: Image.network(
-                          '$_imageBaseUrl${article.image}',
+                          '$_imageBaseUrl${widget.article.image}',
                           width: double.infinity,
                           height: 180,
                           fit: BoxFit.cover,

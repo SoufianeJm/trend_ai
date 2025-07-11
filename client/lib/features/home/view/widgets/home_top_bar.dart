@@ -3,6 +3,7 @@ import 'package:client/core/theme/typography.dart';
 import 'package:client/core/theme/app_palette.dart';
 import 'package:client/features/home/view/pages/coming_soon_page.dart';
 import 'package:client/core/services/user_service.dart';
+import 'package:client/features/profile/view/pages/profile_page.dart';
 
 class HomeTopBar extends StatelessWidget {
   const HomeTopBar({super.key});
@@ -26,19 +27,26 @@ class HomeTopBar extends StatelessWidget {
     
     return Row(
       children: [
-        Container(
-          width: 36,
-          height: 36,
-          decoration: BoxDecoration(
-            color: Palette.background,
-            shape: BoxShape.circle,
-            border: Border.all(color: Palette.gray200, width: 2),
-          ),
-          child: Center(
-            child: Text(
-              initial,
-              style: AppTypography.h4.copyWith(color: Palette.gray900),
-              textAlign: TextAlign.center,
+        GestureDetector(
+          onTap: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => const ProfilePage()),
+            );
+          },
+          child: Container(
+            width: 36,
+            height: 36,
+            decoration: BoxDecoration(
+              color: Palette.background,
+              shape: BoxShape.circle,
+              border: Border.all(color: Palette.gray200, width: 2),
+            ),
+            child: Center(
+              child: Text(
+                initial,
+                style: AppTypography.h4.copyWith(color: Palette.gray900),
+                textAlign: TextAlign.center,
+              ),
             ),
           ),
         ),
