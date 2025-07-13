@@ -38,7 +38,7 @@ class _PremiumNewsCardState extends State<PremiumNewsCard> {
   // Cache formatted date to avoid repeated computation
   String get _formattedDate {
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    final date = widget.article.publishedAt;
+    final date = widget.article.publishedAt ?? DateTime.now();
     return '${months[date.month - 1]} ${date.day}, ${date.year}';
   }
 
@@ -228,7 +228,7 @@ class _PremiumNewsCardState extends State<PremiumNewsCard> {
               
               // Title
               Text(
-                widget.article.title,
+                widget.article.title ?? 'Untitled',
                 style: AppTypography.bodyBold18.copyWith(
                   color: Palette.gray900,
                   height: 1.44,
@@ -247,7 +247,7 @@ class _PremiumNewsCardState extends State<PremiumNewsCard> {
                   borderRadius: BorderRadius.circular(5),
                 ),
                 child: Text(
-                  widget.article.categorieLabel,
+                  widget.article.categorieLabel ?? 'Unknown',
                   style: AppTypography.bodyMedium12.copyWith(
                     color: Palette.primary,
                   ),
@@ -263,7 +263,7 @@ class _PremiumNewsCardState extends State<PremiumNewsCard> {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(9),
                 ),
-                child: widget.article.image.isNotEmpty
+                child: widget.article.image?.isNotEmpty == true
                     ? ClipRRect(
                         borderRadius: BorderRadius.circular(9),
                         child: Image.network(

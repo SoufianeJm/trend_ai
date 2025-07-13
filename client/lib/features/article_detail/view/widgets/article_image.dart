@@ -11,7 +11,7 @@ class ArticleImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-      child: article.image.trim().isNotEmpty
+      child: article.image?.trim().isNotEmpty == true
           ? Image.network(
               '$_imageBaseUrl${article.image}',
               width: double.infinity,

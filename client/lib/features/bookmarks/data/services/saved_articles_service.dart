@@ -29,7 +29,7 @@ class SavedArticlesService {
       
       // Sort by bookmark creation date (most recent first)
       // Since we can't easily get bookmark creation time, we'll sort by article publication date
-      savedArticles.sort((a, b) => b.publishedAt.compareTo(a.publishedAt));
+      savedArticles.sort((a, b) => (b.publishedAt ?? DateTime.now()).compareTo(a.publishedAt ?? DateTime.now()));
       
       return savedArticles;
     } catch (e) {

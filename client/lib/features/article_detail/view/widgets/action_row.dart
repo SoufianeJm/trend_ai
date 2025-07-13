@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:client/core/theme/app_palette.dart';
 
 // This file is deprecated and can be deleted.
+class ActionRow extends StatelessWidget {
   const ActionRow({super.key});
 
   @override

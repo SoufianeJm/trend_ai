@@ -136,7 +136,7 @@ class _NewsCardState extends State<NewsCard> {
               children: [
                 Expanded(
                   child: Text(
-                    widget.item.categorieLabel,
+                    widget.item.categorieLabel ?? 'Unknown',
                     style: AppTypography.bodyMedium10.copyWith(color: Palette.primary),
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -146,7 +146,7 @@ class _NewsCardState extends State<NewsCard> {
                     Image.asset('assets/icons/clock.png', width: 12, height: 12),
                     const SizedBox(width: 6),
                     Text(
-                      timeAgoFromNow(widget.item.publishedAt),
+                      timeAgoFromNow(widget.item.publishedAt ?? DateTime.now()),
                       style: AppTypography.bodyRegular10.copyWith(color: Palette.gray400),
                     ),
                   ],
@@ -155,7 +155,7 @@ class _NewsCardState extends State<NewsCard> {
             ),
             const SizedBox(height: 6),
             Text(
-              widget.item.title,
+              widget.item.title ?? 'Untitled',
               style: AppTypography.bodyMedium14.copyWith(color: Palette.gray900),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,

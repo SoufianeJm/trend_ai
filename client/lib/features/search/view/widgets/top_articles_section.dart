@@ -168,7 +168,7 @@ class _TopArticlesSectionState extends State<TopArticlesSection> {
                                       borderRadius: BorderRadius.circular(12),
                                       child: article.image != ''
                                           ? Image.network(
-                                              article.image,
+                                              article.image ?? '',
                                               width: cardWidth - 16,
                                               height: 120,
                                               fit: BoxFit.cover,
@@ -188,7 +188,7 @@ class _TopArticlesSectionState extends State<TopArticlesSection> {
                                     ),
                                     const SizedBox(height: 10),
                                     Text(
-                                      article.title,
+                                      article.title ?? 'Untitled',
                                       style: AppTypography.bodyMedium16.copyWith(
                                         color: Palette.gray900,
                                         overflow: TextOverflow.ellipsis,

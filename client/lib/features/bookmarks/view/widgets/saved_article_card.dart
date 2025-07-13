@@ -83,7 +83,7 @@ class _SavedArticleCardState extends State<SavedArticleCard> {
               ClipRRect(
                 borderRadius: BorderRadius.circular(8),
                 child: Image.network(
-                  '$_imageBaseUrl${widget.article.image}',
+                  '$_imageBaseUrl${widget.article.image ?? ''}',
                   width: 80,
                   height: 80,
                   fit: BoxFit.cover,
@@ -105,7 +105,7 @@ class _SavedArticleCardState extends State<SavedArticleCard> {
                   children: [
                     // Title
                     Text(
-                      widget.article.title,
+                      widget.article.title ?? 'Untitled',
                       style: AppTypography.bodyMedium14.copyWith(
                         color: Palette.gray900,
                         fontWeight: FontWeight.w600,
@@ -129,7 +129,7 @@ class _SavedArticleCardState extends State<SavedArticleCard> {
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Text(
-                            widget.article.categorieLabel,
+                            widget.article.categorieLabel ?? 'News',
                             style: AppTypography.bodyRegular10.copyWith(
                               color: Palette.primary,
                               fontWeight: FontWeight.w500,
@@ -138,7 +138,7 @@ class _SavedArticleCardState extends State<SavedArticleCard> {
                         ),
                         const SizedBox(width: 8),
                         Text(
-                          timeAgoFromNow(widget.article.publishedAt),
+                          timeAgoFromNow(widget.article.publishedAt ?? DateTime.now()),
                           style: AppTypography.bodyRegular10.copyWith(
                             color: Palette.gray400,
                           ),

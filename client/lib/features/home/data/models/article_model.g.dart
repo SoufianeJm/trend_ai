@@ -9,17 +9,19 @@ part of 'article_model.dart';
 _$ArticleImpl _$$ArticleImplFromJson(Map<String, dynamic> json) =>
     _$ArticleImpl(
       id: (json['id'] as num).toInt(),
-      title: json['title'] as String,
-      description: json['description'] as String,
-      resume: json['resume'] as String,
-      categorieLabel: json['categorieLabel'] as String,
-      image: json['image'] as String,
-      isVideo: json['isVideo'] as bool,
+      title: json['title'] as String?,
+      description: json['description'] as String?,
+      resume: json['resume'] as String?,
+      categorieLabel: json['categorieLabel'] as String?,
+      image: json['image'] as String?,
+      isVideo: json['isVideo'] as bool? ?? false,
       video: json['video'] as String?,
       typeVideo: json['typeVideo'] as String?,
       match: json['match'],
       competitionId: (json['competitionId'] as num?)?.toInt(),
-      publishedAt: DateTime.parse(json['publishedAt'] as String),
+      publishedAt: json['publishedAt'] == null
+          ? null
+          : DateTime.parse(json['publishedAt'] as String),
     );
 
 Map<String, dynamic> _$$ArticleImplToJson(_$ArticleImpl instance) =>
@@ -35,5 +37,5 @@ Map<String, dynamic> _$$ArticleImplToJson(_$ArticleImpl instance) =>
       'typeVideo': instance.typeVideo,
       'match': instance.match,
       'competitionId': instance.competitionId,
-      'publishedAt': instance.publishedAt.toIso8601String(),
+      'publishedAt': instance.publishedAt?.toIso8601String(),
     };

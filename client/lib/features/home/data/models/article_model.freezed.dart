@@ -22,17 +22,17 @@ Article _$ArticleFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$Article {
   int get id => throw _privateConstructorUsedError;
-  String get title => throw _privateConstructorUsedError;
-  String get description => throw _privateConstructorUsedError;
-  String get resume => throw _privateConstructorUsedError;
-  String get categorieLabel => throw _privateConstructorUsedError;
-  String get image => throw _privateConstructorUsedError;
+  String? get title => throw _privateConstructorUsedError;
+  String? get description => throw _privateConstructorUsedError;
+  String? get resume => throw _privateConstructorUsedError;
+  String? get categorieLabel => throw _privateConstructorUsedError;
+  String? get image => throw _privateConstructorUsedError;
   bool get isVideo => throw _privateConstructorUsedError;
   String? get video => throw _privateConstructorUsedError;
   String? get typeVideo => throw _privateConstructorUsedError;
   dynamic get match => throw _privateConstructorUsedError;
   int? get competitionId => throw _privateConstructorUsedError;
-  DateTime get publishedAt => throw _privateConstructorUsedError;
+  DateTime? get publishedAt => throw _privateConstructorUsedError;
 
   /// Serializes this Article to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -50,17 +50,17 @@ abstract class $ArticleCopyWith<$Res> {
   @useResult
   $Res call({
     int id,
-    String title,
-    String description,
-    String resume,
-    String categorieLabel,
-    String image,
+    String? title,
+    String? description,
+    String? resume,
+    String? categorieLabel,
+    String? image,
     bool isVideo,
     String? video,
     String? typeVideo,
     dynamic match,
     int? competitionId,
-    DateTime publishedAt,
+    DateTime? publishedAt,
   });
 }
 
@@ -80,17 +80,17 @@ class _$ArticleCopyWithImpl<$Res, $Val extends Article>
   @override
   $Res call({
     Object? id = null,
-    Object? title = null,
-    Object? description = null,
-    Object? resume = null,
-    Object? categorieLabel = null,
-    Object? image = null,
+    Object? title = freezed,
+    Object? description = freezed,
+    Object? resume = freezed,
+    Object? categorieLabel = freezed,
+    Object? image = freezed,
     Object? isVideo = null,
     Object? video = freezed,
     Object? typeVideo = freezed,
     Object? match = freezed,
     Object? competitionId = freezed,
-    Object? publishedAt = null,
+    Object? publishedAt = freezed,
   }) {
     return _then(
       _value.copyWith(
@@ -98,26 +98,26 @@ class _$ArticleCopyWithImpl<$Res, $Val extends Article>
                 ? _value.id
                 : id // ignore: cast_nullable_to_non_nullable
                       as int,
-            title: null == title
+            title: freezed == title
                 ? _value.title
                 : title // ignore: cast_nullable_to_non_nullable
-                      as String,
-            description: null == description
+                      as String?,
+            description: freezed == description
                 ? _value.description
                 : description // ignore: cast_nullable_to_non_nullable
-                      as String,
-            resume: null == resume
+                      as String?,
+            resume: freezed == resume
                 ? _value.resume
                 : resume // ignore: cast_nullable_to_non_nullable
-                      as String,
-            categorieLabel: null == categorieLabel
+                      as String?,
+            categorieLabel: freezed == categorieLabel
                 ? _value.categorieLabel
                 : categorieLabel // ignore: cast_nullable_to_non_nullable
-                      as String,
-            image: null == image
+                      as String?,
+            image: freezed == image
                 ? _value.image
                 : image // ignore: cast_nullable_to_non_nullable
-                      as String,
+                      as String?,
             isVideo: null == isVideo
                 ? _value.isVideo
                 : isVideo // ignore: cast_nullable_to_non_nullable
@@ -138,10 +138,10 @@ class _$ArticleCopyWithImpl<$Res, $Val extends Article>
                 ? _value.competitionId
                 : competitionId // ignore: cast_nullable_to_non_nullable
                       as int?,
-            publishedAt: null == publishedAt
+            publishedAt: freezed == publishedAt
                 ? _value.publishedAt
                 : publishedAt // ignore: cast_nullable_to_non_nullable
-                      as DateTime,
+                      as DateTime?,
           )
           as $Val,
     );
@@ -158,17 +158,17 @@ abstract class _$$ArticleImplCopyWith<$Res> implements $ArticleCopyWith<$Res> {
   @useResult
   $Res call({
     int id,
-    String title,
-    String description,
-    String resume,
-    String categorieLabel,
-    String image,
+    String? title,
+    String? description,
+    String? resume,
+    String? categorieLabel,
+    String? image,
     bool isVideo,
     String? video,
     String? typeVideo,
     dynamic match,
     int? competitionId,
-    DateTime publishedAt,
+    DateTime? publishedAt,
   });
 }
 
@@ -187,17 +187,17 @@ class __$$ArticleImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? id = null,
-    Object? title = null,
-    Object? description = null,
-    Object? resume = null,
-    Object? categorieLabel = null,
-    Object? image = null,
+    Object? title = freezed,
+    Object? description = freezed,
+    Object? resume = freezed,
+    Object? categorieLabel = freezed,
+    Object? image = freezed,
     Object? isVideo = null,
     Object? video = freezed,
     Object? typeVideo = freezed,
     Object? match = freezed,
     Object? competitionId = freezed,
-    Object? publishedAt = null,
+    Object? publishedAt = freezed,
   }) {
     return _then(
       _$ArticleImpl(
@@ -205,26 +205,26 @@ class __$$ArticleImplCopyWithImpl<$Res>
             ? _value.id
             : id // ignore: cast_nullable_to_non_nullable
                   as int,
-        title: null == title
+        title: freezed == title
             ? _value.title
             : title // ignore: cast_nullable_to_non_nullable
-                  as String,
-        description: null == description
+                  as String?,
+        description: freezed == description
             ? _value.description
             : description // ignore: cast_nullable_to_non_nullable
-                  as String,
-        resume: null == resume
+                  as String?,
+        resume: freezed == resume
             ? _value.resume
             : resume // ignore: cast_nullable_to_non_nullable
-                  as String,
-        categorieLabel: null == categorieLabel
+                  as String?,
+        categorieLabel: freezed == categorieLabel
             ? _value.categorieLabel
             : categorieLabel // ignore: cast_nullable_to_non_nullable
-                  as String,
-        image: null == image
+                  as String?,
+        image: freezed == image
             ? _value.image
             : image // ignore: cast_nullable_to_non_nullable
-                  as String,
+                  as String?,
         isVideo: null == isVideo
             ? _value.isVideo
             : isVideo // ignore: cast_nullable_to_non_nullable
@@ -245,10 +245,10 @@ class __$$ArticleImplCopyWithImpl<$Res>
             ? _value.competitionId
             : competitionId // ignore: cast_nullable_to_non_nullable
                   as int?,
-        publishedAt: null == publishedAt
+        publishedAt: freezed == publishedAt
             ? _value.publishedAt
             : publishedAt // ignore: cast_nullable_to_non_nullable
-                  as DateTime,
+                  as DateTime?,
       ),
     );
   }
@@ -259,17 +259,17 @@ class __$$ArticleImplCopyWithImpl<$Res>
 class _$ArticleImpl implements _Article {
   const _$ArticleImpl({
     required this.id,
-    required this.title,
-    required this.description,
-    required this.resume,
-    required this.categorieLabel,
-    required this.image,
-    required this.isVideo,
+    this.title,
+    this.description,
+    this.resume,
+    this.categorieLabel,
+    this.image,
+    this.isVideo = false,
     this.video,
     this.typeVideo,
     this.match,
     this.competitionId,
-    required this.publishedAt,
+    this.publishedAt,
   });
 
   factory _$ArticleImpl.fromJson(Map<String, dynamic> json) =>
@@ -278,16 +278,17 @@ class _$ArticleImpl implements _Article {
   @override
   final int id;
   @override
-  final String title;
+  final String? title;
   @override
-  final String description;
+  final String? description;
   @override
-  final String resume;
+  final String? resume;
   @override
-  final String categorieLabel;
+  final String? categorieLabel;
   @override
-  final String image;
+  final String? image;
   @override
+  @JsonKey()
   final bool isVideo;
   @override
   final String? video;
@@ -298,7 +299,7 @@ class _$ArticleImpl implements _Article {
   @override
   final int? competitionId;
   @override
-  final DateTime publishedAt;
+  final DateTime? publishedAt;
 
   @override
   String toString() {
@@ -364,17 +365,17 @@ class _$ArticleImpl implements _Article {
 abstract class _Article implements Article {
   const factory _Article({
     required final int id,
-    required final String title,
-    required final String description,
-    required final String resume,
-    required final String categorieLabel,
-    required final String image,
-    required final bool isVideo,
+    final String? title,
+    final String? description,
+    final String? resume,
+    final String? categorieLabel,
+    final String? image,
+    final bool isVideo,
     final String? video,
     final String? typeVideo,
     final dynamic match,
     final int? competitionId,
-    required final DateTime publishedAt,
+    final DateTime? publishedAt,
   }) = _$ArticleImpl;
 
   factory _Article.fromJson(Map<String, dynamic> json) = _$ArticleImpl.fromJson;
@@ -382,15 +383,15 @@ abstract class _Article implements Article {
   @override
   int get id;
   @override
-  String get title;
+  String? get title;
   @override
-  String get description;
+  String? get description;
   @override
-  String get resume;
+  String? get resume;
   @override
-  String get categorieLabel;
+  String? get categorieLabel;
   @override
-  String get image;
+  String? get image;
   @override
   bool get isVideo;
   @override
@@ -402,7 +403,7 @@ abstract class _Article implements Article {
   @override
   int? get competitionId;
   @override
-  DateTime get publishedAt;
+  DateTime? get publishedAt;
 
   /// Create a copy of Article
   /// with the given fields replaced by the non-null parameter values.

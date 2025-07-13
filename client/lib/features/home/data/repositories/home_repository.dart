@@ -35,7 +35,10 @@ class HomeRepository {
         .whereType<Article>()
         .where((article) =>
             article.isVideo == false &&
-            article.image.trim().isNotEmpty)
+            article.image != null &&
+            article.image!.trim().isNotEmpty &&
+            article.title != null &&
+            article.title!.trim().isNotEmpty)
         .take(3)
         .toList();
   } catch (e, st) {
@@ -72,7 +75,10 @@ class HomeRepository {
           .whereType<Article>()
           .where((article) =>
               article.isVideo == false &&
-              article.image.trim().isNotEmpty)
+              article.image != null &&
+              article.image!.trim().isNotEmpty &&
+              article.title != null &&
+              article.title!.trim().isNotEmpty)
           .toList();
     } catch (e, st) {
       print('❌ Error fetching paginated articles: $e\n$st');

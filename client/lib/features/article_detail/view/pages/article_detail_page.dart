@@ -61,11 +61,11 @@ class ArticleDetailPage extends StatelessWidget {
                     children: [
                       const PublisherRow(), // Hardcoded as per your request
                       const SizedBox(height: 24),
-                      ArticleTitle(title: article.title),
+                      ArticleTitle(title: article.title ?? 'Untitled'),
                       const SizedBox(height: 20),
                       MetaRow(article: article),
                       const SizedBox(height: 20),
-                      ArticleContent(content: article.description),
+                      ArticleContent(content: article.description ?? 'No description available'),
                       const SizedBox(height: 16),
                     ],
                   ),
