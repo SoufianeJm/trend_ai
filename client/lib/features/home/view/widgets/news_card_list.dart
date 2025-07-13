@@ -5,7 +5,8 @@ import 'package:client/features/home/data/models/article_model.dart';
 
 class NewsCardList extends StatelessWidget {
   final List<Article> articles;
-  const NewsCardList({super.key, required this.articles});
+  final Function(Article)? onArticleClick;
+  const NewsCardList({super.key, required this.articles, this.onArticleClick});
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +18,10 @@ class NewsCardList extends StatelessWidget {
         itemCount: filtered.length,
         itemBuilder: (_, index) => SizedBox(
           width: 199,
-          child: NewsCard(item: filtered[index]),
+          child: NewsCard(
+            item: filtered[index],
+            onTap: onArticleClick != null ? () => onArticleClick!(filtered[index]) : null,
+          ),
         ),
         separatorBuilder: (_, __) => const SizedBox(width: 16),
       ),

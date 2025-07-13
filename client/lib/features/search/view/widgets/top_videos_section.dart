@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:client/core/theme/app_palette.dart';
 import 'package:client/core/theme/typography.dart';
 import 'package:client/features/search/service/search_service.dart';
+import 'package:client/features/home/data/services/user_interaction_service.dart';
+import 'package:client/core/services/user_service.dart';
 import 'package:shimmer/shimmer.dart';
 
 class TopVideosSection extends StatefulWidget {
@@ -40,7 +42,15 @@ class _TopVideosSectionState extends State<TopVideosSection> {
             String imageUrl = imagePath.startsWith('http')
                 ? imagePath
                 : (imagePath.isNotEmpty ? 'https://cdn.snrtbotola.ma$imagePath' : '');
+            
+            // Extract numeric ID from string format like "video_1234"
+            final rawId = item['id']?.toString() ?? '';
+            print('🔍 Raw video ID from search: $rawId');
+            final numericId = rawId.contains('_') ? int.tryParse(rawId.split('_').last) ?? 0 : int.tryParse(rawId) ?? 0;
+            print('🔢 Parsed numeric video ID: $numericId');
+            
             return {
+              'id': numericId,
               'title': item['title'] ?? '',
               'imageUrl': imageUrl,
               'duration': extra['duration'] ?? '',
@@ -149,7 +159,27 @@ class _TopVideosSectionState extends State<TopVideosSection> {
                         separatorBuilder: (_, __) => const SizedBox(height: 12),
                         itemBuilder: (context, index) {
                           final video = _videos[index];
-                          return Container(
+                          return InkWell(
+                            onTap: () async {
+                              // Track user click interaction for video
+                              try {
+                                final userId = await UserService.getOrGenerateUsername();
+                                final videoId = video['id'] as int;
+                                if (videoId != 0) {
+                                  await UserInteractionService.trackArticleClick(
+                                    userId: userId,
+                                    articleId: videoId,
+                                  );
+                                  print('✅ Tracked search video click: Video $videoId by $userId');
+                                } else {
+                                  print('❌ Video ID is 0, not tracking');
+                                }
+                              } catch (e) {
+                                print('❌ Error tracking search video click: $e');
+                              }
+                              // TODO: Navigate to video detail page when available
+                            },
+                            child: Container(
                             width: double.infinity,
                             padding: const EdgeInsets.all(8),
                             decoration: BoxDecoration(
@@ -231,6 +261,7 @@ class _TopVideosSectionState extends State<TopVideosSection> {
                                 ),
                               ],
                             ),
+                          ),
                           );
                         },
                       ),

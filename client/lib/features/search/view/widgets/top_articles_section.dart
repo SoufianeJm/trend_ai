@@ -4,6 +4,8 @@ import 'package:client/core/theme/typography.dart';
 import 'package:client/features/article_detail/view/pages/article_detail_page.dart';
 import 'package:client/features/home/data/models/article_model.dart';
 import 'package:client/features/search/service/search_service.dart';
+import 'package:client/features/home/data/services/user_interaction_service.dart';
+import 'package:client/core/services/user_service.dart';
 import 'package:shimmer/shimmer.dart';
 
 const _imageBaseUrl = 'https://cdn.snrtbotola.ma';
@@ -42,8 +44,15 @@ class _TopArticlesSectionState extends State<TopArticlesSection> {
           .map<Article>((item) {
         final extra = item['extra'] ?? {};
         final imagePath = extra['image'] ?? '';
+        
+        // Extract numeric ID from string format like "article_6815"
+        final rawId = item['id']?.toString() ?? '';
+        print('🔍 Raw ID from search: $rawId');
+        final numericId = rawId.contains('_') ? int.tryParse(rawId.split('_').last) ?? 0 : int.tryParse(rawId) ?? 0;
+        print('🔢 Parsed numeric ID: $numericId');
+        
         return Article(
-          id: item['id'] is int ? item['id'] : int.tryParse(item['id']?.toString() ?? '') ?? 0,
+          id: numericId,
           title: item['title'] ?? '',
           description: item['description'] ?? '',
           resume: '',
@@ -145,7 +154,28 @@ class _TopArticlesSectionState extends State<TopArticlesSection> {
                           itemBuilder: (context, index) {
                             final article = _articles[index];
                             return InkWell(
-                              onTap: () {
+                              onTap: () async {
+                                // Track user click interaction
+                                try {
+                                  final userId = await UserService.getOrGenerateUsername();
+                                  print('👤 User ID: $userId');
+                                  print('📝 Article object: ${article.toString()}');
+                                  print('🆔 Article ID: ${article.id} (type: ${article.id.runtimeType})');
+                                  if (article.id != 0) {
+                                    print('🚀 Calling trackArticleClick with userId: $userId, articleId: ${article.id}');
+                                    await UserInteractionService.trackArticleClick(
+                                      userId: userId,
+                                      articleId: article.id,
+                                    );
+                                    print('✅ Tracked search result click: Article ${article.id} by $userId');
+                                  } else {
+                                    print('❌ Article ID is 0, not tracking');
+                                  }
+                                } catch (e) {
+                                  print('❌ Error tracking search result click: $e');
+                                }
+                                
+                                // Navigate to article detail
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(

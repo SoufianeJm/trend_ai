@@ -5,6 +5,7 @@ import 'package:client/core/theme/app_palette.dart';
 import 'package:client/features/home/view/widgets/category_chips_list.dart';
 import 'package:client/features/home/view/widgets/section_header.dart';
 import 'package:client/features/home/view/widgets/news_card_list.dart';
+import 'package:client/features/home/view/widgets/breaking_news_section.dart';
 import 'package:client/features/home/data/repositories/home_repository.dart';
 import 'package:client/core/network/dio_client.dart';
 import 'package:client/features/home/data/models/article_model.dart';
@@ -226,38 +227,7 @@ class _HomePageState extends State<HomePage> {
                         const SizedBox(height: 24),
                         const CategoryChipsList(),
                         const SizedBox(height: 24),
-                        const SectionHeader(
-                          title: 'Breaking News',
-                          onViewMore: null,
-                        ),
-                        const SizedBox(height: 16),
-
-                        FutureBuilder<List<Article>>(
-                          future: HomeRepository(DioClient(baseUrl: 'https://api.snrtbotola.ma')).getLatestArticles(),
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState == ConnectionState.waiting) {
-                              return SizedBox(
-                                height: 270,
-                                child: ListView.separated(
-                                  scrollDirection: Axis.horizontal,
-                                  itemCount: 3,
-                                  itemBuilder: (_, __) => const SizedBox(
-                                    width: 199,
-                                    child: NewsCardSkeleton(),
-                                  ),
-                                  separatorBuilder: (_, __) => const SizedBox(width: 16),
-                                ),
-                              );
-                            } else if (snapshot.hasError) {
-                              return Center(child: Text('Error loading articles'));
-                            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                              return const Center(child: Text('No articles found'));
-                            } else {
-                              final articles = snapshot.data!;
-                              return NewsCardList(articles: articles);
-                            }
-                          },
-                        ),
+                        const BreakingNewsSection(),
                         const PopularTagsSection(),
                         _buildInfiniteScrollPremiumNews(),
 

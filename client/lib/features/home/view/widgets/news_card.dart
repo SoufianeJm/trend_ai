@@ -11,8 +11,9 @@ const _imageBaseUrl = 'https://cdn.snrtbotola.ma';
 
 class NewsCard extends StatefulWidget {
   final Article item;
+  final VoidCallback? onTap;
 
-  const NewsCard({super.key, required this.item});
+  const NewsCard({super.key, required this.item, this.onTap});
 
   @override
   State<NewsCard> createState() => _NewsCardState();
@@ -67,10 +68,94 @@ class _NewsCardState extends State<NewsCard> {
     }
   }
 
+  Widget _buildImageWidget() {
+    final imageUrl = widget.item.image;
+    
+    // Check if image URL is valid
+    if (imageUrl == null || imageUrl.isEmpty) {
+      return _buildPlaceholderWidget();
+    }
+    
+    final finalImageUrl = imageUrl.startsWith('http') ? imageUrl : '$_imageBaseUrl$imageUrl';
+    
+    return Image.network(
+      finalImageUrl,
+      height: 140,
+      width: double.infinity,
+      fit: BoxFit.cover,
+      errorBuilder: (context, error, stackTrace) => _buildPlaceholderWidget(),
+      loadingBuilder: (context, child, loadingProgress) {
+        if (loadingProgress == null) return child;
+        return Container(
+          height: 140,
+          width: double.infinity,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Palette.gray100,
+                Palette.gray200,
+              ],
+            ),
+          ),
+          child: Center(
+            child: CircularProgressIndicator(
+              value: loadingProgress.expectedTotalBytes != null
+                  ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
+                  : null,
+              strokeWidth: 2,
+              color: Palette.primary,
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildPlaceholderWidget() {
+    return Container(
+      height: 140,
+      width: double.infinity,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Palette.primary.withOpacity(0.1),
+            Palette.primary.withOpacity(0.05),
+            Colors.white,
+          ],
+          stops: const [0.0, 0.5, 1.0],
+        ),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.image_outlined,
+            size: 32,
+            color: Palette.primary.withOpacity(0.3),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'No image',
+            style: AppTypography.bodyRegular10.copyWith(
+              color: Palette.primary.withOpacity(0.5),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
+        // Call the custom onTap callback if provided
+        widget.onTap?.call();
+        
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (_) => ArticleDetailPage(article: widget.item),
@@ -86,17 +171,7 @@ class _NewsCardState extends State<NewsCard> {
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(12),
-                  child: Image.network(
-                    '$_imageBaseUrl${widget.item.image}',
-                    height: 140,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) => Container(
-                      height: 140,
-                      color: Colors.grey[300],
-                      child: const Icon(Icons.broken_image),
-                    ),
-                  ),
+                  child: _buildImageWidget(),
                 ),
                 Positioned(
                   top: 8,

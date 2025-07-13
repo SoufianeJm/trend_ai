@@ -7,11 +7,69 @@ import 'package:client/features/article_detail/view/widgets/article_content.dart
 import 'package:client/features/article_detail/view/widgets/comment_input.dart';
 import 'package:client/core/theme/app_palette.dart';
 import 'package:client/features/home/data/models/article_model.dart';
+import 'package:client/features/home/data/services/user_interaction_service.dart';
+import 'package:client/core/services/user_service.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
-class ArticleDetailPage extends StatelessWidget {
+class ArticleDetailPage extends StatefulWidget {
   final Article article;
 
   const ArticleDetailPage({super.key, required this.article});
+
+  @override
+  State<ArticleDetailPage> createState() => _ArticleDetailPageState();
+}
+
+class _ArticleDetailPageState extends State<ArticleDetailPage> {
+  DateTime? _pageOpenTime;
+  String? _currentUserId;
+
+  @override
+  void initState() {
+    super.initState();
+    _pageOpenTime = DateTime.now();
+    _initializeUserTracking();
+  }
+
+  @override
+  void dispose() {
+    _trackReadTime();
+    super.dispose();
+  }
+
+  Future<void> _initializeUserTracking() async {
+    try {
+      final user = Supabase.instance.client.auth.currentUser;
+      if (user != null) {
+        _currentUserId = user.id;
+      } else {
+        _currentUserId = await UserService.getOrGenerateUsername();
+      }
+      
+      // Track article view
+      if (_currentUserId != null) {
+        await UserInteractionService.trackArticleView(
+          userId: _currentUserId!,
+          articleId: widget.article.id,
+        );
+      }
+    } catch (e) {
+      print('Error initializing user tracking: $e');
+    }
+  }
+
+  Future<void> _trackReadTime() async {
+    if (_pageOpenTime != null && _currentUserId != null) {
+      final readTime = DateTime.now().difference(_pageOpenTime!).inSeconds;
+      if (readTime > 5) { // Only track if user stayed for more than 5 seconds
+        await UserInteractionService.trackArticleReadTime(
+          userId: _currentUserId!,
+          articleId: widget.article.id,
+          readTimeSeconds: readTime,
+        );
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +86,7 @@ class ArticleDetailPage extends StatelessWidget {
                 // Top image with overlay
                 Stack(
                   children: [
-                    ArticleImage(article: article),
+                    ArticleImage(article: widget.article),
                     Positioned(
                       top: 0,
                       left: 0,
@@ -61,11 +119,11 @@ class ArticleDetailPage extends StatelessWidget {
                     children: [
                       const PublisherRow(), // Hardcoded as per your request
                       const SizedBox(height: 24),
-                      ArticleTitle(title: article.title ?? 'Untitled'),
+                      ArticleTitle(title: widget.article.title ?? 'Untitled'),
                       const SizedBox(height: 20),
-                      MetaRow(article: article),
+                      MetaRow(article: widget.article),
                       const SizedBox(height: 20),
-                      ArticleContent(content: article.description ?? 'No description available'),
+                      ArticleContent(content: widget.article.description ?? 'No description available'),
                       const SizedBox(height: 16),
                     ],
                   ),

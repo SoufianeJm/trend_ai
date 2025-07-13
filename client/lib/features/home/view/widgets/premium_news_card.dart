@@ -4,6 +4,9 @@ import 'package:client/core/theme/typography.dart';
 import 'package:client/features/home/data/models/article_model.dart';
 import 'package:client/features/article_detail/view/pages/article_detail_page.dart';
 import 'package:client/features/bookmarks/data/services/bookmark_service.dart';
+import 'package:client/features/home/data/services/user_interaction_service.dart';
+import 'package:client/core/services/user_service.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 const _imageBaseUrl = 'https://cdn.snrtbotola.ma';
 
@@ -28,11 +31,26 @@ class PremiumNewsCard extends StatefulWidget {
 class _PremiumNewsCardState extends State<PremiumNewsCard> {
   bool _isBookmarked = false;
   bool _isLoading = false;
+  String? _currentUserId;
 
   @override
   void initState() {
     super.initState();
     _checkBookmarkStatus();
+    _initializeUser();
+  }
+
+  Future<void> _initializeUser() async {
+    try {
+      final user = Supabase.instance.client.auth.currentUser;
+      if (user != null) {
+        _currentUserId = user.id;
+      } else {
+        _currentUserId = await UserService.getOrGenerateUsername();
+      }
+    } catch (e) {
+      print('Error initializing user: $e');
+    }
   }
 
   // Cache formatted date to avoid repeated computation
@@ -85,6 +103,14 @@ class _PremiumNewsCardState extends State<PremiumNewsCard> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
+        // Track click interaction
+        if (_currentUserId != null) {
+          UserInteractionService.trackArticleClick(
+            userId: _currentUserId!,
+            articleId: widget.article.id,
+          );
+        }
+        
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (_) => ArticleDetailPage(article: widget.article),
