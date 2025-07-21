@@ -3,7 +3,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:client/features/home/data/models/article_model.dart';
 
 class UserInteractionService {
-  static const String _baseUrl = 'https://contactjoumal--snrt-semantic-api-fastapi-app.modal.run';
+  static const String _baseUrl = 'https://joumalsoufiane0--terra-semantic-api-fastapi-app.modal.run';
   static final Dio _dio = Dio();
   static final SupabaseClient _supabase = Supabase.instance.client;
 

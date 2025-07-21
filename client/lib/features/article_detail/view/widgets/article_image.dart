@@ -13,7 +13,7 @@ class ArticleImage extends StatelessWidget {
     return ClipRRect(
       child: article.image?.trim().isNotEmpty == true
           ? Image.network(
-              '$_imageBaseUrl${article.image}',
+              article.image?.startsWith('http') == true ? article.image! : '$_imageBaseUrl${article.image}',
               width: double.infinity,
               height: 260,
               fit: BoxFit.cover,

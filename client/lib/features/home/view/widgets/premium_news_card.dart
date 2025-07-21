@@ -23,7 +23,7 @@ class PremiumNewsCard extends StatefulWidget {
     this.publisherLogo,
     this.isVerified = false,
   });
-  
+
   @override
   State<PremiumNewsCard> createState() => _PremiumNewsCardState();
 }
@@ -55,7 +55,20 @@ class _PremiumNewsCardState extends State<PremiumNewsCard> {
 
   // Cache formatted date to avoid repeated computation
   String get _formattedDate {
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const months = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
+    ];
     final date = widget.article.publishedAt ?? DateTime.now();
     return '${months[date.month - 1]} ${date.day}, ${date.year}';
   }
@@ -75,7 +88,7 @@ class _PremiumNewsCardState extends State<PremiumNewsCard> {
     });
 
     final success = await BookmarkService.toggleBookmark(widget.article.id);
-    
+
     if (success && mounted) {
       setState(() {
         _isBookmarked = !_isBookmarked;
@@ -110,7 +123,7 @@ class _PremiumNewsCardState extends State<PremiumNewsCard> {
             articleId: widget.article.id,
           );
         }
-        
+
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (_) => ArticleDetailPage(article: widget.article),
@@ -156,15 +169,13 @@ class _PremiumNewsCardState extends State<PremiumNewsCard> {
                                     image: NetworkImage(widget.publisherLogo!),
                                     fit: BoxFit.cover,
                                   )
-                                : null,
+                                : const DecorationImage(
+                                    image: AssetImage(
+                                      'assets/images/snrtbotola.png',
+                                    ),
+                                    fit: BoxFit.cover,
+                                  ),
                           ),
-                          child: widget.publisherLogo == null
-                              ? Icon(
-                                  Icons.article_outlined,
-                                  size: 16,
-                                  color: Palette.gray400,
-                                )
-                              : null,
                         ),
                         const SizedBox(width: 12),
                         // Publisher Name and Date
@@ -176,10 +187,9 @@ class _PremiumNewsCardState extends State<PremiumNewsCard> {
                                 children: [
                                   Flexible(
                                     child: Text(
-                                      widget.publisherName ?? 'SNRT News',
-                                      style: AppTypography.bodyRegular14.copyWith(
-                                        color: Palette.gray400,
-                                      ),
+                                      widget.publisherName ?? 'SNRT Botola',
+                                      style: AppTypography.bodyRegular14
+                                          .copyWith(color: Palette.gray400),
                                       overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
@@ -209,9 +219,14 @@ class _PremiumNewsCardState extends State<PremiumNewsCard> {
                   GestureDetector(
                     onTap: _isLoading ? null : _toggleBookmark,
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 6,
+                      ),
                       decoration: BoxDecoration(
-                        color: _isBookmarked ? Palette.primary : Palette.gray200,
+                        color: _isBookmarked
+                            ? Palette.primary
+                            : Palette.gray200,
                         borderRadius: BorderRadius.circular(6),
                       ),
                       child: _isLoading
@@ -224,7 +239,9 @@ class _PremiumNewsCardState extends State<PremiumNewsCard> {
                                   height: 12,
                                   child: CircularProgressIndicator(
                                     strokeWidth: 2,
-                                    color: _isBookmarked ? Colors.white : Palette.primary,
+                                    color: _isBookmarked
+                                        ? Colors.white
+                                        : Palette.primary,
                                   ),
                                 ),
                               ),
@@ -232,7 +249,9 @@ class _PremiumNewsCardState extends State<PremiumNewsCard> {
                           : Text(
                               _isBookmarked ? 'Saved' : 'Save',
                               style: AppTypography.bodyMedium12.copyWith(
-                                color: _isBookmarked ? Colors.white : Palette.gray900,
+                                color: _isBookmarked
+                                    ? Colors.white
+                                    : Palette.gray900,
                               ),
                             ),
                     ),
@@ -247,11 +266,11 @@ class _PremiumNewsCardState extends State<PremiumNewsCard> {
                       color: Palette.gray400,
                     ),
                   ),
-              ],
+                ],
               ),
-              
+
               const SizedBox(height: 12),
-              
+
               // Title
               Text(
                 widget.article.title ?? 'Untitled',
@@ -262,9 +281,9 @@ class _PremiumNewsCardState extends State<PremiumNewsCard> {
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),
-              
+
               const SizedBox(height: 12),
-              
+
               // Category Tag
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
@@ -279,9 +298,9 @@ class _PremiumNewsCardState extends State<PremiumNewsCard> {
                   ),
                 ),
               ),
-              
+
               const SizedBox(height: 12),
-              
+
               // Cover Image
               Container(
                 width: double.infinity,
@@ -297,18 +316,19 @@ class _PremiumNewsCardState extends State<PremiumNewsCard> {
                           width: double.infinity,
                           height: 180,
                           fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) => Container(
-                            width: double.infinity,
-                            height: 180,
-                            color: Palette.gray100,
-                            child: Center(
-                              child: Icon(
-                                Icons.image_outlined,
-                                size: 48,
-                                color: Palette.gray400,
+                          errorBuilder: (context, error, stackTrace) =>
+                              Container(
+                                width: double.infinity,
+                                height: 180,
+                                color: Palette.gray100,
+                                child: Center(
+                                  child: Icon(
+                                    Icons.image_outlined,
+                                    size: 48,
+                                    color: Palette.gray400,
+                                  ),
+                                ),
                               ),
-                            ),
-                          ),
                           loadingBuilder: (context, child, loadingProgress) {
                             if (loadingProgress == null) return child;
                             return Container(
@@ -318,9 +338,10 @@ class _PremiumNewsCardState extends State<PremiumNewsCard> {
                               child: Center(
                                 child: CircularProgressIndicator(
                                   color: Palette.primary,
-                                  value: loadingProgress.expectedTotalBytes != null
+                                  value:
+                                      loadingProgress.expectedTotalBytes != null
                                       ? loadingProgress.cumulativeBytesLoaded /
-                                          loadingProgress.expectedTotalBytes!
+                                            loadingProgress.expectedTotalBytes!
                                       : null,
                                 ),
                               ),

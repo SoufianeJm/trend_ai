@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:client/features/home/data/models/article_model.dart';
 import 'package:client/features/home/view/widgets/news_card.dart';
-import 'package:client/features/home/data/models/article_model.dart';
 
 class NewsCardList extends StatelessWidget {
   final List<Article> articles;
@@ -10,7 +9,9 @@ class NewsCardList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final filtered = articles.where((a) => a.image != null && a.image.toString().trim().isNotEmpty).toList();
+    final filtered = articles
+        .where((a) => a.image != null && a.image.toString().trim().isNotEmpty)
+        .toList();
     return SizedBox(
       height: 270,
       child: ListView.separated(
@@ -20,7 +21,9 @@ class NewsCardList extends StatelessWidget {
           width: 199,
           child: NewsCard(
             item: filtered[index],
-            onTap: onArticleClick != null ? () => onArticleClick!(filtered[index]) : null,
+            onTap: onArticleClick != null
+                ? () => onArticleClick!(filtered[index])
+                : null,
           ),
         ),
         separatorBuilder: (_, __) => const SizedBox(width: 16),

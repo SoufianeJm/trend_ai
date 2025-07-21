@@ -3,23 +3,15 @@ import 'package:client/features/home/view/widgets/home_header.dart';
 import 'package:client/features/home/view/widgets/search_bar.dart' as custom;
 import 'package:client/core/theme/app_palette.dart';
 import 'package:client/features/home/view/widgets/category_chips_list.dart';
-import 'package:client/features/home/view/widgets/section_header.dart';
-import 'package:client/features/home/view/widgets/news_card_list.dart';
 import 'package:client/features/home/view/widgets/breaking_news_section.dart';
 import 'package:client/features/home/data/repositories/home_repository.dart';
 import 'package:client/core/network/dio_client.dart';
 import 'package:client/features/home/data/models/article_model.dart';
 import 'package:client/features/home/view/widgets/bottom_navbar.dart';
 import 'package:client/features/home/view/widgets/popular_tags_section.dart';
-import 'package:client/features/home/view/widgets/premium_news_section.dart';
 import 'package:client/features/home/view/widgets/premium_news_card.dart';
-import 'package:client/features/home/view/widgets/news_card.dart';
-import 'package:hive_flutter/hive_flutter.dart';
-import 'package:client/core/widgets/custom_button.dart';
-import 'package:client/features/auth/view/widgets/custom_field.dart';
 import 'package:client/core/theme/typography.dart';
 import 'package:client/features/home/view/widgets/onboarding_modal.dart';
-import 'package:client/features/auth/view/pages/signin_page.dart';
 import 'package:client/core/services/user_service.dart';
 import 'dart:async';
 
@@ -33,27 +25,32 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   bool _modalShown = false;
   final ScrollController _scrollController = ScrollController();
-  
+
   // Premium News infinite scroll state
   List<Article> _premiumArticles = [];
   bool _isLoadingPremium = false;
   bool _hasReachedEnd = false;
   int _currentPage = 0;
   static const int _pageSize = 3;
-  
+
   // Performance optimizations
   late final HomeRepository _repository;
   Timer? _scrollDebouncer;
   DateTime _lastScrollTime = DateTime.now();
   static const Duration _scrollDebounceDelay = Duration(milliseconds: 100);
-  static const double _triggerOffset = 200; // Aggressive prefetching for smooth UX
+  static const double _triggerOffset =
+      200; // Aggressive prefetching for smooth UX
 
   @override
   void initState() {
     super.initState();
     // Initialize cached repository to avoid creating new instances
-    _repository = HomeRepository(DioClient(baseUrl: 'https://api.snrtbotola.ma'));
-    WidgetsBinding.instance.addPostFrameCallback((_) => _checkAndShowOnboardingModal());
+    _repository = HomeRepository(
+      DioClient(baseUrl: 'https://api.snrtbotola.ma'),
+    );
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => _checkAndShowOnboardingModal(),
+    );
     _scrollController.addListener(_onScroll);
     _loadInitialPremiumNews();
   }
@@ -94,10 +91,10 @@ class _HomePageState extends State<HomePage> {
     _scrollDebouncer?.cancel();
     _scrollDebouncer = Timer(_scrollDebounceDelay, () {
       if (!mounted || _isLoadingPremium || _hasReachedEnd) return;
-      
+
       final scrollPosition = _scrollController.position;
       final triggerPoint = scrollPosition.maxScrollExtent - _triggerOffset;
-      
+
       if (scrollPosition.pixels >= triggerPoint) {
         // Additional throttling - prevent calls within 500ms
         final now = DateTime.now();
@@ -111,7 +108,7 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _loadInitialPremiumNews() async {
     if (_isLoadingPremium) return;
-    
+
     if (mounted) {
       setState(() {
         _isLoadingPremium = true;
@@ -123,7 +120,7 @@ class _HomePageState extends State<HomePage> {
         pageNo: 0,
         pageSize: _pageSize,
       );
-      
+
       if (mounted) {
         setState(() {
           _premiumArticles = articles;
@@ -144,7 +141,7 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _loadMorePremiumNews() async {
     if (_isLoadingPremium || _hasReachedEnd || !mounted) return;
-    
+
     // Set loading state immediately for instant UI feedback
     if (mounted) {
       setState(() {
@@ -158,7 +155,7 @@ class _HomePageState extends State<HomePage> {
         pageNo: _currentPage + 1,
         pageSize: _pageSize,
       );
-      
+
       // Batch all state updates in a single setState call
       if (mounted && newArticles.isNotEmpty) {
         setState(() {
@@ -167,8 +164,10 @@ class _HomePageState extends State<HomePage> {
           _isLoadingPremium = false;
           _hasReachedEnd = newArticles.length < _pageSize;
         });
-        
-        print('✅ Loaded ${newArticles.length} more articles. Total: ${_premiumArticles.length}');
+
+        print(
+          '✅ Loaded ${newArticles.length} more articles. Total: ${_premiumArticles.length}',
+        );
       } else if (mounted) {
         setState(() {
           _isLoadingPremium = false;
@@ -198,10 +197,7 @@ class _HomePageState extends State<HomePage> {
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
-                colors: [
-                  Color(0xFFD7ECFF),
-                  Colors.white,
-                ],
+                colors: [Color(0xFFD7ECFF), Colors.white],
               ),
             ),
           ),
@@ -230,7 +226,6 @@ class _HomePageState extends State<HomePage> {
                         const BreakingNewsSection(),
                         const PopularTagsSection(),
                         _buildInfiniteScrollPremiumNews(),
-
                       ],
                     ),
                   ),
@@ -250,13 +245,11 @@ class _HomePageState extends State<HomePage> {
       children: [
         const SizedBox(height: 24),
         Text(
-          'Premium News',
-          style: AppTypography.bodyMedium18.copyWith(
-            color: Palette.gray900,
-          ),
+          'Breaking News',
+          style: AppTypography.bodyMedium18.copyWith(color: Palette.gray900),
         ),
         const SizedBox(height: 16),
-        
+
         // Optimized Premium News Cards with ListView.builder
         if (_premiumArticles.isNotEmpty)
           ListView.builder(
@@ -268,12 +261,12 @@ class _HomePageState extends State<HomePage> {
               return PremiumNewsCard(
                 key: ValueKey(article.id), // Add key for better performance
                 article: article,
-                publisherName: 'SNRT News',
+                publisherName: 'SNRT Botola',
                 isVerified: true,
               );
             },
           ),
-        
+
         // Optimized loading indicator
         if (_isLoadingPremium)
           const Padding(
@@ -289,7 +282,7 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
-        
+
         // End indicator
         if (_hasReachedEnd && _premiumArticles.isNotEmpty)
           Padding(
@@ -327,13 +320,14 @@ class _PulsingDotsLoaderState extends State<_PulsingDotsLoader>
         vsync: this,
       );
     });
-    
+
     _animations = _controllers.map((controller) {
-      return Tween<double>(begin: 0.4, end: 1.0).animate(
-        CurvedAnimation(parent: controller, curve: Curves.easeInOut),
-      );
+      return Tween<double>(
+        begin: 0.4,
+        end: 1.0,
+      ).animate(CurvedAnimation(parent: controller, curve: Curves.easeInOut));
     }).toList();
-    
+
     _startAnimation();
   }
 
@@ -368,7 +362,9 @@ class _PulsingDotsLoaderState extends State<_PulsingDotsLoader>
               width: 8,
               height: 8,
               decoration: BoxDecoration(
-                color: Palette.primary.withValues(alpha: _animations[index].value),
+                color: Palette.primary.withValues(
+                  alpha: _animations[index].value,
+                ),
                 shape: BoxShape.circle,
               ),
             );

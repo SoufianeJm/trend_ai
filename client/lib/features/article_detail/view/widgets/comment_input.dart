@@ -12,7 +12,7 @@ class CommentInput extends StatelessWidget {
         Expanded(
           child: TextField(
             decoration: InputDecoration(
-              hintText: 'Ask SNRT AI...',
+hintText: 'Write a comment...',
               hintStyle: AppTypography.bodyMedium14.copyWith(color: Palette.gray400),
               contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
               filled: true,

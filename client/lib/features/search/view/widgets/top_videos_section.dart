@@ -56,6 +56,7 @@ class _TopVideosSectionState extends State<TopVideosSection> {
               'duration': extra['duration'] ?? '',
             };
           })
+          .take(5)
           .toList();
       setState(() {
         _videos = videos;

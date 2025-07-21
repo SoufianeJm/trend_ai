@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:client/core/theme/app_palette.dart';
 import 'package:client/core/theme/typography.dart';
-import 'package:client/features/auth/view/pages/signin_page.dart';
 import 'package:client/core/services/user_service.dart';
 
 // Logout functionality added
@@ -18,15 +17,17 @@ class SettingsPage extends StatelessWidget {
         elevation: 0,
         title: Text(
           'Settings',
-          style: AppTypography.bodyMedium18.copyWith(
-            color: Palette.gray900,
-          ),
+          style: AppTypography.bodyMedium18.copyWith(color: Palette.gray900),
         ),
         centerTitle: true,
         leading: Padding(
           padding: const EdgeInsets.only(left: 16),
           child: IconButton(
-            icon: Image.asset('assets/icons/nav_settings.png', width: 24, height: 24),
+            icon: Image.asset(
+              'assets/icons/nav_settings.png',
+              width: 24,
+              height: 24,
+            ),
             onPressed: () {},
           ),
         ),
@@ -56,8 +57,10 @@ class SettingsPage extends StatelessWidget {
                 future: UserService.getOrGenerateUsername(),
                 builder: (context, snapshot) {
                   final username = snapshot.data ?? 'Guest User';
-                  final initial = username.isNotEmpty ? username[0].toUpperCase() : 'G';
-                  
+                  final initial = username.isNotEmpty
+                      ? username[0].toUpperCase()
+                      : 'G';
+
                   return Row(
                     children: [
                       Container(
@@ -71,7 +74,9 @@ class SettingsPage extends StatelessWidget {
                         child: Center(
                           child: Text(
                             initial,
-                            style: AppTypography.h3.copyWith(color: Palette.gray900),
+                            style: AppTypography.h3.copyWith(
+                              color: Palette.gray900,
+                            ),
                             textAlign: TextAlign.center,
                           ),
                         ),
@@ -97,7 +102,11 @@ class SettingsPage extends StatelessWidget {
                           ],
                         ),
                       ),
-                      Icon(Icons.arrow_forward_ios, size: 20, color: Palette.gray400),
+                      Icon(
+                        Icons.arrow_forward_ios,
+                        size: 20,
+                        color: Palette.gray400,
+                      ),
                     ],
                   );
                 },
@@ -121,15 +130,36 @@ class SettingsPage extends StatelessWidget {
                 children: [
                   ListTile(
                     leading: Icon(Icons.lock_outline, color: Palette.primary),
-                    title: Text('Privacy', style: AppTypography.bodyRegular14.copyWith(color: Palette.gray900)),
-                    trailing: Icon(Icons.arrow_forward_ios, size: 20, color: Palette.gray400),
+                    title: Text(
+                      'Privacy',
+                      style: AppTypography.bodyRegular14.copyWith(
+                        color: Palette.gray900,
+                      ),
+                    ),
+                    trailing: Icon(
+                      Icons.arrow_forward_ios,
+                      size: 20,
+                      color: Palette.gray400,
+                    ),
                     onTap: () {},
                   ),
                   Divider(color: Palette.gray100, height: 1),
                   ListTile(
-                    leading: Icon(Icons.notifications_none, color: Palette.primary),
-                    title: Text('Notifications', style: AppTypography.bodyRegular14.copyWith(color: Palette.gray900)),
-                    trailing: Icon(Icons.arrow_forward_ios, size: 20, color: Palette.gray400),
+                    leading: Icon(
+                      Icons.notifications_none,
+                      color: Palette.primary,
+                    ),
+                    title: Text(
+                      'Notifications',
+                      style: AppTypography.bodyRegular14.copyWith(
+                        color: Palette.gray900,
+                      ),
+                    ),
+                    trailing: Icon(
+                      Icons.arrow_forward_ios,
+                      size: 20,
+                      color: Palette.gray400,
+                    ),
                     onTap: () {},
                   ),
                 ],
@@ -153,8 +183,17 @@ class SettingsPage extends StatelessWidget {
                 children: [
                   ListTile(
                     leading: Icon(Icons.info_outline, color: Palette.primary),
-                    title: Text('About', style: AppTypography.bodyRegular14.copyWith(color: Palette.gray900)),
-                    trailing: Icon(Icons.arrow_forward_ios, size: 20, color: Palette.gray400),
+                    title: Text(
+                      'About',
+                      style: AppTypography.bodyRegular14.copyWith(
+                        color: Palette.gray900,
+                      ),
+                    ),
+                    trailing: Icon(
+                      Icons.arrow_forward_ios,
+                      size: 20,
+                      color: Palette.gray400,
+                    ),
                     onTap: () {},
                   ),
                   Divider(color: Palette.gray100, height: 1),
@@ -166,5 +205,4 @@ class SettingsPage extends StatelessWidget {
       ),
     );
   }
-
 }

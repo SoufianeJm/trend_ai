@@ -6,6 +6,7 @@ import 'package:client/features/article_detail/view/widgets/meta_row.dart';
 import 'package:client/features/article_detail/view/widgets/article_content.dart';
 import 'package:client/features/article_detail/view/widgets/comment_input.dart';
 import 'package:client/core/theme/app_palette.dart';
+import 'package:client/core/theme/typography.dart';
 import 'package:client/features/home/data/models/article_model.dart';
 import 'package:client/features/home/data/services/user_interaction_service.dart';
 import 'package:client/core/services/user_service.dart';
@@ -101,9 +102,9 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
                                 icon: Icons.arrow_back,
                                 onTap: () => Navigator.of(context).pop(),
                               ),
-                              _circleIconButton(
+_circleIconButton(
                                 icon: Icons.more_horiz,
-                                onTap: () {},
+                                onTap: () => _showReportDialog(context),
                               ),
                             ],
                           ),
@@ -117,7 +118,10 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const PublisherRow(), // Hardcoded as per your request
+PublisherRow(
+publisherName: 'SNRT Botola', // Since publisherName doesn't exist in Article model
+                        authorName: widget.article.categorieLabel ?? 'Unknown Category',
+                      ),
                       const SizedBox(height: 24),
                       ArticleTitle(title: widget.article.title ?? 'Untitled'),
                       const SizedBox(height: 20),
@@ -140,6 +144,49 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
           child: const CommentInput(),
         ),
       ),
+    );
+  }
+
+  void _showReportDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            'Report Article',
+            style: AppTypography.bodyBold16.copyWith(color: Palette.gray900),
+          ),
+          content: Text(
+            'Are you sure you want to report this article? This will help us improve our content quality.',
+            style: AppTypography.bodyRegular14.copyWith(color: Palette.gray600),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text(
+                'Cancel',
+                style: AppTypography.bodyMedium14.copyWith(color: Palette.gray500),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Article reported successfully'),
+                    backgroundColor: Colors.red,
+                    duration: Duration(seconds: 2),
+                  ),
+                );
+              },
+              child: Text(
+                'Report',
+                style: AppTypography.bodyMedium14.copyWith(color: Colors.red),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 

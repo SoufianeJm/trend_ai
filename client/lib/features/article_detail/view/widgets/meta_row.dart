@@ -16,10 +16,6 @@ class MetaRow extends StatelessWidget {
         Text(article.categorieLabel ?? 'Unknown', style: AppTypography.bodyMedium14.copyWith(color: Palette.primary)),
         const SizedBox(width: 12),
         Text(timeAgoFromNow(article.publishedAt ?? DateTime.now()), style: AppTypography.bodyMedium14.copyWith(color: Palette.gray400)),
-        const Spacer(),
-        Icon(Icons.thumb_up_alt_outlined, size: 18, color: Palette.gray400),
-        const SizedBox(width: 4),
-        Text('2k liked', style: AppTypography.bodyMedium14.copyWith(color: Palette.gray400)),
       ],
     );
   }

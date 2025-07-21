@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:client/core/theme/app_palette.dart';
 import 'package:client/core/theme/typography.dart';
 import 'package:client/features/home/data/models/article_model.dart';
-import 'package:client/features/home/data/repositories/home_repository.dart';
 import 'package:client/features/home/data/services/user_interaction_service.dart';
 import 'package:client/features/home/view/widgets/news_card.dart';
 import 'package:client/features/home/view/widgets/news_card_list.dart';
-import 'package:client/core/network/dio_client.dart';
 import 'package:client/core/services/user_service.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -52,14 +50,14 @@ class _BreakingNewsSectionState extends State<BreakingNewsSection> {
 
   Future<void> _loadBreakingNews() async {
     if (!mounted) return;
-    
+
     setState(() {
       _isLoading = true;
     });
 
     try {
       List<Article> articles = [];
-      
+
       // Try to get recommendations first if user has interactions
       if (_currentUserId != null) {
         articles = await UserInteractionService.getRecommendations(
@@ -67,7 +65,7 @@ class _BreakingNewsSectionState extends State<BreakingNewsSection> {
           topK: 5,
         );
       }
-      
+
       // If no recommendations, fall back to articles from Milvus
       if (articles.isEmpty) {
         articles = await UserInteractionService.getArticlesFromMilvus(
@@ -98,7 +96,7 @@ class _BreakingNewsSectionState extends State<BreakingNewsSection> {
 
   Future<void> _refreshNews() async {
     if (_isRefreshing || !mounted) return;
-    
+
     setState(() {
       _isRefreshing = true;
     });
@@ -110,14 +108,14 @@ class _BreakingNewsSectionState extends State<BreakingNewsSection> {
           userId: _currentUserId!,
           topK: 5,
         );
-        
+
         if (recommendations.isNotEmpty) {
           setState(() {
             _articles = recommendations;
             _useRecommendations = true;
             _isRefreshing = false;
           });
-          
+
           // Show feedback to user
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
@@ -131,14 +129,14 @@ class _BreakingNewsSectionState extends State<BreakingNewsSection> {
           return;
         }
       }
-      
+
       // Fall back to articles from Milvus if no recommendations
       final articles = await UserInteractionService.getArticlesFromMilvus(
         limit: 10,
         offset: 0,
         articleType: 'article',
       );
-      
+
       if (mounted) {
         setState(() {
           _articles = articles;
@@ -165,8 +163,10 @@ class _BreakingNewsSectionState extends State<BreakingNewsSection> {
         Row(
           children: [
             Text(
-              'Breaking News',
-              style: AppTypography.bodyMedium18.copyWith(color: Palette.gray900),
+              'For You',
+              style: AppTypography.bodyMedium18.copyWith(
+                color: Palette.gray900,
+              ),
             ),
             if (_useRecommendations) ...[
               const SizedBox(width: 8),
@@ -194,7 +194,9 @@ class _BreakingNewsSectionState extends State<BreakingNewsSection> {
                       height: 16,
                       child: CircularProgressIndicator(
                         strokeWidth: 2,
-                        valueColor: AlwaysStoppedAnimation<Color>(Palette.primary),
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          Palette.primary,
+                        ),
                       ),
                     )
                   : Text(
@@ -208,7 +210,7 @@ class _BreakingNewsSectionState extends State<BreakingNewsSection> {
           ],
         ),
         const SizedBox(height: 16),
-        
+
         // News Content
         if (_isLoading)
           SizedBox(
@@ -216,10 +218,8 @@ class _BreakingNewsSectionState extends State<BreakingNewsSection> {
             child: ListView.separated(
               scrollDirection: Axis.horizontal,
               itemCount: 3,
-              itemBuilder: (_, __) => const SizedBox(
-                width: 199,
-                child: NewsCardSkeleton(),
-              ),
+              itemBuilder: (_, __) =>
+                  const SizedBox(width: 199, child: NewsCardSkeleton()),
               separatorBuilder: (_, __) => const SizedBox(width: 16),
             ),
           )

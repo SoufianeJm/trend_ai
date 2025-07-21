@@ -3,7 +3,10 @@ import 'package:client/core/theme/typography.dart';
 import 'package:client/core/theme/app_palette.dart';
 
 class PublisherRow extends StatelessWidget {
-  const PublisherRow({super.key});
+  final String publisherName;
+  final String authorName;
+
+  const PublisherRow({super.key, required this.publisherName, required this.authorName});
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +17,7 @@ class PublisherRow extends StatelessWidget {
         ClipRRect(
           borderRadius: BorderRadius.circular(30),
           child: Image.asset(
-            'assets/images/news.png',
+'assets/images/snrtbotola.png',
             width: 48,
             height: 48,
             fit: BoxFit.cover,
@@ -33,13 +36,13 @@ class PublisherRow extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
-                'SNRT News',
+Text(
+                publisherName,
                 style: AppTypography.bodyBold16.copyWith(color: Palette.gray900),
               ),
               const SizedBox(height: 2),
-              Text(
-                'By Random User',
+Text(
+authorName,
                 style: AppTypography.bodyMedium14.copyWith(color: Palette.gray400),
               ),
             ],
@@ -57,7 +60,7 @@ class PublisherRow extends StatelessWidget {
           ),
           onPressed: () {},
           child: Text(
-            'Follow',
+'Save',
             style: AppTypography.bodyBold16.copyWith(color: Palette.white),
           ),
         ),

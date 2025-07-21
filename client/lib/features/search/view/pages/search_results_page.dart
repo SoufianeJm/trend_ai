@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:client/core/theme/app_palette.dart';
 import 'package:client/core/theme/typography.dart';
 import 'package:client/features/search/view/widgets/search_app_bar.dart';
-import 'package:client/features/search/view/widgets/search_widget.dart';
-import 'package:client/features/search/view/widgets/trending_article_card.dart';
 import 'package:client/features/search/service/search_service.dart';
 import 'package:client/features/search/view/widgets/category_chips_bar.dart';
 import 'package:client/features/search/view/widgets/top_articles_section.dart';
@@ -41,7 +39,9 @@ class _SearchResultsPageState extends State<SearchResultsPage> {
             final extra = item['extra'] ?? {};
             return {
               'title': item['title'] ?? '',
-              'imageUrl': extra['image'] != null ? 'https://cdn.snrtbotola.ma${extra['image']}' : '',
+              'imageUrl': extra['image'] != null
+                  ? 'https://cdn.snrtbotola.ma${extra['image']}'
+                  : '',
               'category': extra['categorieLabel'] ?? 'News',
               'meta': '', // Placeholder, update if needed
             };
@@ -115,8 +115,12 @@ class _SearchResultsPageState extends State<SearchResultsPage> {
                         const SizedBox(width: 8),
                         Expanded(
                           child: Text(
-                            _controller.text.isNotEmpty ? _controller.text : 'Search article...',
-                            style: AppTypography.bodyMedium14.copyWith(color: Palette.gray900),
+                            _controller.text.isNotEmpty
+                                ? _controller.text
+                                : 'Search article...',
+                            style: AppTypography.bodyMedium14.copyWith(
+                              color: Palette.gray900,
+                            ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),

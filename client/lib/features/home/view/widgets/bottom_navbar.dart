@@ -3,7 +3,7 @@ import 'package:client/core/theme/app_palette.dart';
 import 'package:client/core/theme/typography.dart';
 import 'package:client/features/search/view/pages/search_page.dart';
 import 'package:client/features/chatbot/view/pages/chatbot_page.dart';
-import 'package:client/features/settings/view/pages/settings_page.dart';
+import 'package:client/features/bookmarks/view/pages/bookmarks_page.dart';
 
 class HomeBottomNavBar extends StatelessWidget {
   final int activeIndex;
@@ -17,7 +17,7 @@ class HomeBottomNavBar extends StatelessWidget {
     _NavItem('Home', 'assets/icons/nav_home.png', 'assets/icons/nav_home_active.png'),
     _NavItem('Explore', 'assets/icons/nav_explore.png', 'assets/icons/nav_explore_active.png'),
     _NavItem('Bot', 'assets/icons/nav_robotic.png', 'assets/icons/nav_robotic_active.png'),
-    _NavItem('Settings', 'assets/icons/nav_settings.png', 'assets/icons/nav_settings_active.png'),
+    _NavItem('Saved', null, null, Icons.bookmark_border, Icons.bookmark),
   ];
 
   @override
@@ -50,7 +50,7 @@ class HomeBottomNavBar extends StatelessWidget {
                 case 3:
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const SettingsPage()),
+                    MaterialPageRoute(builder: (context) => const BookmarksPage()),
                   );
                   break;
                 // case 0 is Home — assume no action or already handled
@@ -59,11 +59,17 @@ class HomeBottomNavBar extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Image.asset(
-                  isActive ? item.activeIcon : item.icon,
-                  width: 24,
-                  height: 24,
-                ),
+                item.icon != null
+                    ? Image.asset(
+                        isActive ? item.activeIcon! : item.icon!,
+                        width: 24,
+                        height: 24,
+                      )
+                    : Icon(
+                        isActive ? item.activeIconData! : item.iconData!,
+                        size: 24,
+                        color: isActive ? Palette.primary : Palette.gray900,
+                      ),
                 const SizedBox(height: 4),
                 Text(
                   item.label,
@@ -82,8 +88,16 @@ class HomeBottomNavBar extends StatelessWidget {
 
 class _NavItem {
   final String label;
-  final String icon;
-  final String activeIcon;
+  final String? icon;
+  final String? activeIcon;
+  final IconData? iconData;
+  final IconData? activeIconData;
 
-  const _NavItem(this.label, this.icon, this.activeIcon);
+  const _NavItem(
+    this.label,
+    this.icon,
+    this.activeIcon, [
+    this.iconData,
+    this.activeIconData,
+  ]);
 }
